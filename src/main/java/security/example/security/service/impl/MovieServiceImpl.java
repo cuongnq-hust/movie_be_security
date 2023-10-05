@@ -29,20 +29,34 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    public Movie findMovieById(Long id) {
+        System.out.println("id can tim la =======: "+ id);
+        return movieRepository.findMovieById(id);
+    }
+
+    @Override
     public List<Movie> findAllMovies() {
         return movieRepository.findAll();
     }
+
+    @Override
+    public List<Review> getReviewsByMovieId(Long movieId) {
+        System.out.println("id nhac duoc la" + movieId);
+        return reviewRepository.findByMovieId(movieId);
+    }
+
     @Transactional
-    public Movie addReviewToMovie(Long movieId, String reviewBody) {
-        System.out.println("id la" + movieId);
-        System.out.println("body la" + reviewBody);
+    public Review addReviewToMovie(Long movieId, String reviewBody) {
+        Review review = new Review();
+        if (!movieRepository.existsById(movieId)) {
+            throw new IllegalArgumentException("Invalid movie ID: " + movieId);
+        }
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid movie ID: " + movieId));
-
-        Review review = new Review();
         review.setBody(reviewBody);
-//        review.setMovie(movie);
+        review.setMovie(movie);
         movie.getReviews().add(review);
-        return movieRepository.save(movie);
+        movieRepository.save(movie);
+        return reviewRepository.save(review);
     }
 }

@@ -1,5 +1,6 @@
 package security.example.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -79,5 +80,16 @@ public class Review {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id=" + id +
+                ", body='" + body + '\'' +
+                ", create_At=" + create_At +
+                ", update_At=" + update_At +
+                ", movie=" + movie +
+                '}';
     }
 }

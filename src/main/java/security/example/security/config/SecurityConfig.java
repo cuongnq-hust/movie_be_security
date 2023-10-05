@@ -21,15 +21,16 @@ public class SecurityConfig { //phan quyen
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests()
-                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/movies/**").permitAll()
-                .requestMatchers("/demo/admin/**").hasAnyAuthority("ROLE_ADMIN")
-                .requestMatchers("/demo/user/**").hasAnyAuthority("ROLE_ADMIN","ROLE_USER")
+                .requestMatchers(HttpMethod.GET, "/api/v1/review/{movieId}/reviews").permitAll()
+                .requestMatchers("/api/v1/movies/createMovie").hasAnyAuthority("ROLE_ADMIN")
+                .requestMatchers("/api/v1/movies/allMovies", "/api/v1/movies/movie/{id}").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/review/{movieId}/reviews").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                 .and()
                 .csrf().disable()
                 .cors(Customizer.withDefaults())

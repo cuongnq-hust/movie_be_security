@@ -2,14 +2,11 @@ package security.example.security.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import security.example.security.model.User;
-import security.example.security.repository.RoleCustomRepo;
-import security.example.security.repository.UserRepository;
 
 import java.util.Collection;
 import java.util.Date;
@@ -19,10 +16,6 @@ import java.util.stream.Collectors;
 public class JwtService {
     @Value("${secret.key}")
     private String secretKey;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleCustomRepo roleCustomRepo;
     public String generateToken(User user, Collection<SimpleGrantedAuthority> authorities){
         //Phương thức này cung cấp mã hóa và tạo JWT cho người dùng và danh sách vai trò được cung cấp.
         // Nó sử dụng thuật toán HMAC256 và secretKey đã cấu hình để tạo chữ ký JWT.
@@ -42,5 +35,4 @@ public class JwtService {
                 .withExpiresAt(new Date(System.currentTimeMillis()+ 70*60*1000))
                 .sign(algorithm);
     }
-
 }

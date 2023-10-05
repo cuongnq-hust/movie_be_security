@@ -1,5 +1,6 @@
 package security.example.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class Movie {
 
     private String backdrops;
     private String genres;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "movie")
     private List<Review> reviews = new ArrayList<>();
 
@@ -125,18 +126,4 @@ public class Movie {
         this.update_At = update_At;
     }
 
-    @Override
-    public String toString() {
-        return "Movie{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", trailerLink='" + trailerLink + '\'' +
-                ", poster='" + poster + '\'' +
-                ", genres=" + genres +
-                ", backdrops=" + backdrops +
-                ", reviews=" + reviews +
-                ", create_At=" + create_At +
-                ", update_At=" + update_At +
-                '}';
-    }
 }

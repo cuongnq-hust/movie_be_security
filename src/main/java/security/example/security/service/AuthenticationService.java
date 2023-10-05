@@ -34,6 +34,7 @@ public class AuthenticationService {
             userService.saveUser(new User(registerRequest.getMobile_number(),registerRequest.getUser_name(),registerRequest.getEmail(),registerRequest.getPassword(), new HashSet<>()));
             userService.addToUser(registerRequest.getEmail(),"ROLE_USER"); // defautl role
             User user = userRepository.findByEmail(registerRequest.getEmail()).orElseThrow();
+            System.out.println("dang ky thanh cong");
             return ResponseEntity.ok(user);
         }catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -59,6 +60,7 @@ public class AuthenticationService {
             set.stream().forEach(i -> authorities.add(new SimpleGrantedAuthority(i.getName())));
             var jwtAccessToken = jwtService.generateToken(user, authorities);
             var jwtRefershToken = jwtService.generateRefreshToken(user, authorities);
+            System.out.println("dang nhap thanh cong");
             return ResponseEntity.ok(AuthenticationResponse.builder()
                     .access_token(jwtAccessToken)
                     .refresh_token(jwtRefershToken)
