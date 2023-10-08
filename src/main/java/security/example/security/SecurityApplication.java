@@ -13,6 +13,7 @@ import security.example.security.model.Role;
 import security.example.security.model.User;
 import security.example.security.service.UserService;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 @SpringBootApplication
@@ -39,4 +40,18 @@ public class SecurityApplication {
 	BCryptPasswordEncoder bCryptPasswordEncoder(){
 		return new BCryptPasswordEncoder();
 	}
+//	@Bean
+//	CommandLineRunner run(UserService userService){
+//		return args -> {
+//			userService.saveRole(new Role(null, "ROLE_USER","this is User"));
+//			userService.saveRole(new Role(null, "ROLE_ADMIN","this is User"));
+//			userService.saveRole(new Role(null, "ROLE_MANAGER","this is User"));
+//			userService.saveUser(new User("123456", "yasuo","tom1@gmail.com","pass", new HashSet<>(), new ArrayList<>(),new ArrayList<>(), new ArrayList<>()));
+//			userService.saveUser(new User("123456", "zed","tom2@gmail.com","pass", new HashSet<>(), new ArrayList<>(),new ArrayList<>(),new ArrayList<>()));
+//			userService.saveUser(new User("123456", "tom","tom3@gmail.com","pass", new HashSet<>(), new ArrayList<>(),new ArrayList<>(),new ArrayList<>()));
+//			userService.addToUser("tom1@gmail.com", "ROLE_USER");
+//			userService.addToUser("tom2@gmail.com", "ROLE_ADMIN");
+//			userService.addToUser("tom3@gmail.com", "ROLE_MANAGER");
+//		};
+//	}
 }

@@ -2,6 +2,7 @@ package security.example.security.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,10 +12,10 @@ import security.example.security.model.User;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
-
+import com.auth0.jwt.JWTVerifier;
 @Service
 public class JwtService {
-    @Value("${secret.key}")
+    @Value("123")
     private String secretKey;
     public String generateToken(User user, Collection<SimpleGrantedAuthority> authorities){
         //Phương thức này cung cấp mã hóa và tạo JWT cho người dùng và danh sách vai trò được cung cấp.
@@ -34,5 +35,10 @@ public class JwtService {
                 .withSubject(user.getEmail())
                 .withExpiresAt(new Date(System.currentTimeMillis()+ 70*60*1000))
                 .sign(algorithm);
+    }
+    public DecodedJWT decodeToken(String token, String secretKey) {
+        Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        return verifier.verify(token);
     }
 }

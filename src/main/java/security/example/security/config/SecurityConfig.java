@@ -26,11 +26,9 @@ public class SecurityConfig { //phan quyen
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/review/{movieId}/reviews").permitAll()
+                .requestMatchers("/api/v1/auth/**","/api/v1/movies/allMovies","/api/v1/movies/movie/{id}","/api/v1/review/{movieId}/reviews").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/review/{movieId}/reviews","/api/v1/new/new","/api/v1/auth/user").permitAll()
                 .requestMatchers("/api/v1/movies/createMovie").hasAnyAuthority("ROLE_ADMIN")
-                .requestMatchers("/api/v1/movies/allMovies", "/api/v1/movies/movie/{id}").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-                .requestMatchers(HttpMethod.POST, "/api/v1/review/{movieId}/reviews").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                 .and()
                 .csrf().disable()
                 .cors(Customizer.withDefaults())

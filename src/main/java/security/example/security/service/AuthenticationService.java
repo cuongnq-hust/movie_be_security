@@ -31,7 +31,7 @@ public class AuthenticationService {
             if(userRepository.existsById(registerRequest.getEmail().toString())){
                 throw new IllegalArgumentException("User with " + registerRequest.getEmail().toString()+ "email already");
             }
-            userService.saveUser(new User(registerRequest.getMobile_number(),registerRequest.getUser_name(),registerRequest.getEmail(),registerRequest.getPassword(), new HashSet<>()));
+            userService.saveUser(new User(registerRequest.getMobile_number(),registerRequest.getUser_name(),registerRequest.getEmail(),registerRequest.getPassword(), new HashSet<>(), new ArrayList<>(),new ArrayList<>(),new ArrayList<>()));
             userService.addToUser(registerRequest.getEmail(),"ROLE_USER"); // defautl role
             User user = userRepository.findByEmail(registerRequest.getEmail()).orElseThrow();
             System.out.println("dang ky thanh cong");

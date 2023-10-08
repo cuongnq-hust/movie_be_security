@@ -1,6 +1,5 @@
 package security.example.security.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -30,16 +29,20 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_name", nullable = false)
+    private User user;
     public Review() {
     }
 
-    public Review(Long id, String body, Date create_At, Date update_At, Movie movie) {
+
+    public Review(Long id, String body, Date create_At, Date update_At, Movie movie, User user) {
         this.id = id;
         this.body = body;
         this.create_At = create_At;
         this.update_At = update_At;
         this.movie = movie;
+        this.user = user;
     }
 
     public Long getId() {
@@ -82,14 +85,11 @@ public class Review {
         this.movie = movie;
     }
 
-    @Override
-    public String toString() {
-        return "Review{" +
-                "id=" + id +
-                ", body='" + body + '\'' +
-                ", create_At=" + create_At +
-                ", update_At=" + update_At +
-                ", movie=" + movie +
-                '}';
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

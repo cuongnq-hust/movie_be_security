@@ -1,5 +1,6 @@
 package security.example.security.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import security.example.security.model.Movie;
@@ -19,12 +20,12 @@ public class MovieController {
 
     @PostMapping("/createMovie")
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        System.out.println("movie la: " + movie.toString());
+//        System.out.println("movie la: " + movie.toString());
         return ResponseEntity.ok(movieService.createMovie(movie));
     }
 
     @GetMapping("/allMovies")
-    public List<Movie> allMovies() {
+    public List<Movie> allMovies() throws JsonProcessingException {
         return movieService.findAllMovies();
     }
 

@@ -1,5 +1,6 @@
 package security.example.security.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import security.example.security.model.Movie;
 import security.example.security.model.Review;
 
@@ -10,7 +11,7 @@ public interface MovieService {
 
     Movie findMovieById(Long id);
 
-    List<Movie> findAllMovies();
+    List<Movie> findAllMovies() throws JsonProcessingException;
 
     List<Review> getReviewsByMovieId(Long movieId);
 }

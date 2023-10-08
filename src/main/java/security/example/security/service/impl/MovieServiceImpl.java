@@ -45,13 +45,13 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie createMovie(Movie movie) {
-//        System.out.println("movie vao la:" + movie.toString());
+        System.out.println("Tao movie thanh cong");
         return movieRepository.save(movie);
     }
 
     @Override
     public Movie findMovieById(Long id) {
-        System.out.println("id can tim la =======: " + id);
+//        System.out.println("id can tim la =======: " + id);
         return movieRepository.findMovieById(id);
     }
 
@@ -59,23 +59,23 @@ public class MovieServiceImpl implements MovieService {
     public List<Movie> findAllMovies() throws JsonProcessingException {
 //        return movieRepository.findAll();
 
-        LOGGER.info("getAllEmployee fail: " + objectMapper.writeValueAsString(movieRepository.findListMovies()));
-
+//        LOGGER.info("getAllEmployee fail: " + objectMapper.writeValueAsString(movieRepository.findListMovies()));
+        System.out.println("Da in ra tat ca movie ");
 
         return movieRepository.findListMovies();
     }
 
     @Override
     public List<Review> getReviewsByMovieId(Long movieId) {
-        System.out.println("id nhac duoc la" + movieId);
+        System.out.println("Da lay tat ca reviw cua phim" + movieId);
         return reviewRepository.findByMovieId(movieId);
     }
 
     @Transactional
     public Review addReviewToMovie(Long movieId, String reviewBody, String accessToken) {
-        System.out.println("nhan dc la" + movieId);
-        System.out.println("nhan dc la" + reviewBody);
-        System.out.println("nhan la" + accessToken);
+//        System.out.println("nhan dc la" + movieId);
+//        System.out.println("nhan dc la" + reviewBody);
+//        System.out.println("nhan la" + accessToken);
         // Giải mã access_token và lấy thông tin người dùng từ đó
         String jwtToken = accessToken;
         String decodedToken = jwtToken.replace("Bearer ", ""); // Loại bỏ tiền tố "Bearer " nếu có
@@ -84,31 +84,29 @@ public class MovieServiceImpl implements MovieService {
         String userName = jwt.getSubject(); // Lấy subject (email) từ JWT
         Date expiresAt = jwt.getExpiresAt(); // Lấy thời gian hết hạn của JWT
         List<String> roles = jwt.getClaim("roles").asList(String.class); // Lấy danh sách vai trò từ JWT
-        System.out.println("Subject: " + userName);
-        System.out.println("Expires At: " + expiresAt);
-        System.out.println("Roles: " + roles);
+//        System.out.println("Subject: " + userName);
+//        System.out.println("Expires At: " + expiresAt);
+//        System.out.println("Roles: " + roles);
 
 
 //         Kiểm tra xem người dùng có tồn tại trong cơ sở dữ liệu hay không
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
-        System.out.println("User la` : " + user);
+//        System.out.println("User la` : " + user);
 // Kiểm tra xem phim có tồn tại trong cơ sở dữ liệu hay không
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid movie ID: " + movieId));
-        System.out.println("Movie la` : " + movie.getTitle());
         // Tạo đánh giá mới
         Review review = new Review();
         review.setBody(reviewBody);
-
-        review.setMovie(movie);
-        movie.getReviews().add(review);
-
         review.setUser(user);
-        user.getReviews().add(review);
-        movieRepository.save(movie);
-        userRepository.save(user);
+        review.setMovie(movie);
         reviewRepository.save(review);
+        System.out.println("Tao review thanh cong");
+//        movie.getReviews().add(review);
+//        user.getReviews().add(review);
+//        movieRepository.save(movie);
+//        userRepository.save(user);
         return review;
     }
 }
