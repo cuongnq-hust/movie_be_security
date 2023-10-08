@@ -26,7 +26,7 @@ public class SecurityConfig { //phan quyen
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/v1/auth/**","/api/v1/movies/allMovies","/api/v1/movies/movie/{id}","/api/v1/review/{movieId}/reviews").permitAll()
+                .requestMatchers("/api/v1/auth/**","/api/v1/movies/allMovies","/api/v1/movies/movie/{id}","/api/v1/review/{movieId}/reviews","/api/v1/new/new").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/review/{movieId}/reviews","/api/v1/new/new","/api/v1/auth/user").permitAll()
                 .requestMatchers("/api/v1/movies/createMovie").hasAnyAuthority("ROLE_ADMIN")
                 .and()
@@ -39,6 +39,5 @@ public class SecurityConfig { //phan quyen
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-
     }
 }
