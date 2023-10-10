@@ -54,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> findListCommentByNewid(Long newId) {
-        System.out.println("list la");
+//        System.out.println("list la");
         return commentRepository.findListCommentByNewId(newId);
     }
 }

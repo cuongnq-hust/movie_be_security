@@ -20,8 +20,10 @@ public class NewDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(length = 10000)
     private String title;
-    private String image;
+    @Lob // Sử dụng annotation @Lob để lưu trữ dữ liệu lớn
+    private byte[] image;
     private Date create_At;
     private Date update_At;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,15 +33,14 @@ public class NewDto {
     public NewDto() {
     }
 
-    public NewDto(Long id, String title, String image, User user, Date create_At, Date update_At) {
+    public NewDto(Long id, String title, byte[] image, Date create_At, Date update_At, User user) {
         this.id = id;
         this.title = title;
         this.image = image;
-        this.user = user;
         this.create_At = create_At;
         this.update_At = update_At;
+        this.user = user;
     }
-
 
     public Long getId() {
         return id;
@@ -57,11 +58,12 @@ public class NewDto {
         this.title = title;
     }
 
-    public String getImage() {
+
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

@@ -23,7 +23,7 @@ public class CommentController {
     }
     @GetMapping("/list/{newId}")
     public List<Comment> getCommentList(@PathVariable Long newId){
-        System.out.println("list la" + newId);
+//        System.out.println("list la" + newId);
         return commentService.findListCommentByNewid(newId);
     }
 }

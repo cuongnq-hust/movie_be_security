@@ -30,7 +30,7 @@ public class Movie {
     private String trailerLink;
 
     private String poster;
-
+    @Column(length = 1000)
     private String backdrops;
     private String genres;
     @JsonIgnore
