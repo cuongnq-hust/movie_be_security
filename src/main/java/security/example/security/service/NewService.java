@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface NewService {
-    NewDto saveNew(NewDto newDto, String accessToken, MultipartFile file) throws IOException;
+    NewDto saveNew(String title, String accessToken, MultipartFile file) throws IOException;
 
     List<NewDto> findAllNew();
 

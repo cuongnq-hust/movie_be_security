@@ -14,14 +14,13 @@ import java.util.List;
 @RequestMapping("/api/v1/new")
 public class NewDtoController {
     private final NewServiceImpl newService;
-
     public NewDtoController(NewServiceImpl newService) {
         this.newService = newService;
     }
 
     @PostMapping("/new")
-    public ResponseEntity<NewDto> addNew(@RequestBody NewDto newDto, @RequestParam("file") MultipartFile file, @RequestHeader(name = "Authorization") String accessToken) throws IOException {
-        NewDto addNewDto = newService.saveNew(newDto,accessToken,file);
+    public ResponseEntity<NewDto> addNew(@RequestParam String title,@RequestParam MultipartFile image, @RequestHeader(name = "Authorization") String accessToken) throws IOException {
+        NewDto addNewDto = newService.saveNew(title,accessToken,image);
         return ResponseEntity.status(HttpStatus.CREATED).body(addNewDto);
     }
 //    @PostMapping("/update/{id}")

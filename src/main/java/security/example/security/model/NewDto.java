@@ -22,8 +22,8 @@ public class NewDto {
     private Long id;
     @Column(length = 10000)
     private String title;
-    @Lob // Sử dụng annotation @Lob để lưu trữ dữ liệu lớn
-    private byte[] image;
+    @Column
+    private String image;
     private Date create_At;
     private Date update_At;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,7 +33,7 @@ public class NewDto {
     public NewDto() {
     }
 
-    public NewDto(Long id, String title, byte[] image, Date create_At, Date update_At, User user) {
+    public NewDto(Long id, String title, String image, Date create_At, Date update_At, User user) {
         this.id = id;
         this.title = title;
         this.image = image;
@@ -59,11 +59,11 @@ public class NewDto {
     }
 
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
