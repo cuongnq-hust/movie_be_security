@@ -23,8 +23,8 @@ public class Comment {
     private Long id;
     private String body;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "newdto_id", nullable = false)
-    private NewDto newDto;
+    @JoinColumn(name = "review_id", nullable = false)
+    private Review review;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_name", nullable = false)
     private User user;
@@ -32,12 +32,12 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(Date create_At, Date update_At, Long id, String body, NewDto newDto, User user) {
+    public Comment(Date create_At, Date update_At, Long id, String body, Review review, User user) {
         this.create_At = create_At;
         this.update_At = update_At;
         this.id = id;
         this.body = body;
-        this.newDto = newDto;
+        this.review = review;
         this.user = user;
     }
 
@@ -73,12 +73,12 @@ public class Comment {
         this.body = body;
     }
 
-    public NewDto getNewDto() {
-        return newDto;
+    public Review getReview() {
+        return review;
     }
 
-    public void setNewDto(NewDto newDto) {
-        this.newDto = newDto;
+    public void setReview(Review review) {
+        this.review = review;
     }
 
     public User getUser() {

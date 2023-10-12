@@ -44,11 +44,11 @@ public class SecurityApplication {
 //	CommandLineRunner run(UserService userService){
 //		return args -> {
 //			userService.saveRole(new Role(null, "ROLE_USER","this is User"));
-//			userService.saveRole(new Role(null, "ROLE_ADMIN","this is User"));
-//			userService.saveRole(new Role(null, "ROLE_MANAGER","this is User"));
-//			userService.saveUser(new User("123456", "yasuo","tom1@gmail.com","pass", new HashSet<>(), new ArrayList<>(),new ArrayList<>(), new ArrayList<>()));
-//			userService.saveUser(new User("123456", "zed","tom2@gmail.com","pass", new HashSet<>(), new ArrayList<>(),new ArrayList<>(),new ArrayList<>()));
-//			userService.saveUser(new User("123456", "tom","tom3@gmail.com","pass", new HashSet<>(), new ArrayList<>(),new ArrayList<>(),new ArrayList<>()));
+//			userService.saveRole(new Role(null, "ROLE_ADMIN","this is ADMIN"));
+//			userService.saveRole(new Role(null, "ROLE_MANAGER","this is MANAGER"));
+//			userService.saveUser(new User("123456", "yasuo","tom1@gmail.com","pass", new HashSet<>(),new ArrayList<>(),new ArrayList<>(),""));
+//			userService.saveUser(new User("123456", "zed","tom2@gmail.com","pass", new HashSet<>(),new ArrayList<>(),new ArrayList<>(),""));
+//			userService.saveUser(new User("123456", "tom","tom3@gmail.com","pass", new HashSet<>(),new ArrayList<>(),new ArrayList<>(),""));
 //			userService.addToUser("tom1@gmail.com", "ROLE_USER");
 //			userService.addToUser("tom2@gmail.com", "ROLE_ADMIN");
 //			userService.addToUser("tom3@gmail.com", "ROLE_MANAGER");

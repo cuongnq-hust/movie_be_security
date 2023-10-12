@@ -4,9 +4,14 @@ import security.example.security.model.Comment;
 
 import java.util.List;
 
-
 public interface CommentService {
-    Comment saveComment(String body, String accessToken, Long newId);
+    Comment addComment(String body, Long id, String accessToken);
+    List<Comment> findReviewByReviewId(Long id);
 
-    List<Comment> findListCommentByNewid(Long newId);
+    void deleteComment(Long id);
+
+    Comment updateCommentById(String body, Long id,String accessToken);
+
+    void  deleteCommentByReviewId(Long id);
 }
+

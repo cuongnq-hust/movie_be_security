@@ -1,33 +1,64 @@
 package security.example.security.controller;
 
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import security.example.security.auth.AuthenticationRequest;
 import security.example.security.auth.RegisterRequest;
 import security.example.security.model.User;
-import security.example.security.service.AuthenticationService;
+import security.example.security.model.request.UploadFileRequest;
+import security.example.security.service.impl.AuthenticationService;
+import security.example.security.service.impl.AwsS3ServiceImpl;
 import security.example.security.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@ApiResponses(value = {
+        @io.swagger.annotations.ApiResponse(code = 400, message = "This is a bad request, please follow the API documentation for the proper request format"),
+        @io.swagger.annotations.ApiResponse(code = 401, message = "Due to security constraints, your access request cannot be authorized"),
+        @io.swagger.annotations.ApiResponse(code = 500, message = "The server is down. Please bear with us."),
+}
+)
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserServiceImpl userService;
+    @Autowired
+    private AwsS3ServiceImpl awsS3Service;
+
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest){
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
     }
+
     @GetMapping("/user")
-    public User getUserByToken(@RequestHeader(name = "Authorization") String accessToken){
-//        System.out.println("token dc vo la" + accessToken);
+    public User getUserByToken(@RequestHeader(name = "Authorization") String accessToken) {
         return userService.getUserByToken(accessToken);
+    }
+
+    @PostMapping("/update")
+    public User updateUserByToken(
+            @RequestHeader(name = "Authorization") String accessToken,
+            @RequestParam String userName,
+            @RequestParam String mobile_number,
+            @RequestPart("file") MultipartFile file, @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request
+    ) {
+
+        String fileName = null;
+
+        try {
+            fileName = awsS3Service.uploadFile(file, request);
+        } catch (Exception e) {
+            // Xử lý ngoại lệ khi tải lên tập tin
+        }
+        return userService.updateUser(userName, fileName, mobile_number, accessToken);
     }
 }

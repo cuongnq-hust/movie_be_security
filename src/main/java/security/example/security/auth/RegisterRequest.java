@@ -14,4 +14,5 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String mobile_number;
+    private String image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlKtkny51Mx0H8vVChwctclFp_wcfvo_-Nmg&usqp=CAU";
 }

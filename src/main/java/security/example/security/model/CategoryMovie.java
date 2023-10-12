@@ -1,12 +1,14 @@
 package security.example.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "news")
-public class NewDto {
+@Table(name = "categorys")
+public class CategoryMovie {
     @PrePersist
     protected void onCreate() {
         this.create_At = new Date(System.currentTimeMillis());
@@ -20,26 +22,21 @@ public class NewDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 10000)
+
     private String title;
-    @Column
-    private String image;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "categoryMovie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Movie> movies = new ArrayList<>();
+
     private Date create_At;
     private Date update_At;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_name", nullable = false)
-    private User user;
 
-    public NewDto() {
+    public CategoryMovie() {
     }
 
-    public NewDto(Long id, String title, String image, Date create_At, Date update_At, User user) {
-        this.id = id;
+    public CategoryMovie(String title) {
         this.title = title;
-        this.image = image;
-        this.create_At = create_At;
-        this.update_At = update_At;
-        this.user = user;
     }
 
     public Long getId() {
@@ -58,21 +55,12 @@ public class NewDto {
         this.title = title;
     }
 
-
-    public String getImage() {
-        return image;
+    public List<Movie> getMovies() {
+        return movies;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
     }
 
     public Date getCreate_At() {
