@@ -1,8 +1,11 @@
 package security.example.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -17,6 +20,7 @@ public class Review {
     protected void onUpdate() {
         this.update_At = new Date(System.currentTimeMillis());
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,17 +36,20 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_name", nullable = false)
     private User user;
+    @JsonIgnore
+    @OneToMany(mappedBy = "review")
+    private List<Comment> commentList = new ArrayList<>();
     public Review() {
     }
 
-
-    public Review(Long id, String body, Date create_At, Date update_At, Movie movie, User user) {
+    public Review(Long id, String body, Date create_At, Date update_At, Movie movie, User user, List<Comment> commentList) {
         this.id = id;
         this.body = body;
         this.create_At = create_At;
         this.update_At = update_At;
         this.movie = movie;
         this.user = user;
+        this.commentList = commentList;
     }
 
     public Long getId() {
@@ -91,5 +98,13 @@ public class Review {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 }

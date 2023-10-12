@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import security.example.security.model.request.UploadFileRequest;
-import security.example.security.service.AwsS3ServiceImpl;
+import security.example.security.service.impl.AwsS3ServiceImpl;
 
 
 @RestController
@@ -21,8 +21,6 @@ import security.example.security.service.AwsS3ServiceImpl;
 public class AwsController {
     @Autowired
     private  AwsS3ServiceImpl awsS3Service;
-
-
 
     @PostMapping("/upload-file")
     public ResponseEntity<?> uploadFile(@RequestPart("file") MultipartFile file, @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request) {

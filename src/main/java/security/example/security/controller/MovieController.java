@@ -1,42 +1,61 @@
 package security.example.security.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import security.example.security.model.Movie;
-import security.example.security.model.Review;
+import security.example.security.model.request.UploadFileRequest;
+import security.example.security.service.impl.AwsS3ServiceImpl;
 import security.example.security.service.impl.MovieServiceImpl;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/movies")
+@RequestMapping("/api/v1/movie")
 public class MovieController {
     private final MovieServiceImpl movieService;
+    @Autowired
+    private AwsS3ServiceImpl awsS3Service;
 
     public MovieController(MovieServiceImpl movieService) {
         this.movieService = movieService;
     }
 
-    @PostMapping("/createMovie")
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-//        System.out.println("movie la: " + movie.toString());
-        return ResponseEntity.ok(movieService.createMovie(movie));
+    @PostMapping("/new")
+    public Movie createMovie(
+            @RequestParam String title,
+            @RequestParam String trailerLink,
+            @RequestPart("avatar") MultipartFile avatar,
+            @RequestPart("poster") MultipartFile poster,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request,
+            @RequestParam Long category_id) {
+        String avatarNew = null;
+        String posterNew = null;
+        try {
+            avatarNew = awsS3Service.uploadFile(avatar, request);
+            posterNew = awsS3Service.uploadFile(poster, request);
+        } catch (Exception e) {
+        }
+        return movieService.saveMovie(title, trailerLink, posterNew, avatarNew, category_id);
     }
 
-    @GetMapping("/allMovies")
-    public List<Movie> allMovies() throws JsonProcessingException {
-        return movieService.findAllMovies();
+    @GetMapping("/all")
+    private List<Movie> getAllMovie() {
+        return movieService.getAllMoview();
     }
 
-    @GetMapping("/movie/{id}")
+    @GetMapping("/{id}")
     public Movie findMovieById(@PathVariable Long id) {
-        System.out.println("id cần tìm là: " + id);
         return movieService.findMovieById(id);
     }
-
-
-
-
+    @GetMapping("/findByName")
+    public List<Movie> findMovieByTitle(@RequestParam String title) {
+        List<Movie> movies = movieService.findMovieByName(title);
+        return movies;
+    }
+    @GetMapping("/findByCategoryId/{id}")
+    public List<Movie> findMovieByTitle(@PathVariable Long id) {
+        List<Movie> movies = movieService.findMovieByCategoryId(id);
+        return movies;
+    }
 }
-

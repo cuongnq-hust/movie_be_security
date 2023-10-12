@@ -9,4 +9,6 @@ public interface UserService {
     void addToUser(String username, String rolename);
 
     User getUserByToken(String token);
+
+    User updateUser(String userName, String image, String mobile_number, String token);
 }

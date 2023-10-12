@@ -1,4 +1,4 @@
-package security.example.security.service;
+package security.example.security.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import security.example.security.aws.AwsS3;
 import security.example.security.model.request.UploadFileRequest;
+import security.example.security.service.AwsS3Service;
 import security.example.security.utils.Constant;
 import software.amazon.awssdk.regions.Region;
 
@@ -49,10 +50,6 @@ public class AwsS3ServiceImpl implements AwsS3Service {
             DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             Date date = new Date();
             String dateNow = dateFormat.format(date);
-//            if (type.equals(Constant.UPLOAD_AVATAR_USER_TYPE))
-//                path = AVATAR_PREFIX + username + "/T" + dateNow + file.getOriginalFilename();
-//            else if(type.equals(Constant.UPLOAD_QUESTION_FILE_TYPE))
-//                path=QUESTION_PREFIX+"question"+questionID+"/T"+dateNow+file.getOriginalFilename();
             return switch (type) {
                 case Constant.UPLOAD_AVATAR_USER_TYPE ->
                         AVATAR_PREFIX  + "/T" + dateNow + file.getOriginalFilename();
