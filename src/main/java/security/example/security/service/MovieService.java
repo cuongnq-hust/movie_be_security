@@ -1,17 +1,16 @@
 package security.example.security.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import security.example.security.model.Movie;
-import security.example.security.model.Review;
 
 import java.util.List;
 
 public interface MovieService {
-    Movie createMovie(Movie movie);
+    Movie saveMovie(String title, String trailerLink,String poster, String avatar, Long category_id);
+    List<Movie> getAllMoview();
 
     Movie findMovieById(Long id);
 
-    List<Movie> findAllMovies() throws JsonProcessingException;
+    List<Movie> findMovieByName(String title);
 
-    List<Review> getReviewsByMovieId(Long movieId);
+    List<Movie> findMovieByCategoryId(Long id);
 }

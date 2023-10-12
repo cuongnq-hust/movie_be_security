@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,24 +39,21 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "Role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<NewDto> newDtos = new ArrayList<>();
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
+    private String image;
+
     private Date create_At;
     private Date update_At;
 
     public User() {
     }
 
-    public User(String mobile_number, String user_name, String email, String password, Set<Role> roles, List<Review> reviews, List<NewDto> newDtos,List<Comment> commentList) {
+    public User(String mobile_number, String user_name, String email, String password, Set<Role> roles, List<Review> reviews,List<Comment> commentList, String image) {
         this.user_id = email;
         this.mobile_number = mobile_number;
         this.user_name = user_name;
@@ -65,10 +61,9 @@ public class User implements UserDetails {
         this.password = password;
         this.roles = roles;
         this.reviews = reviews;
-        this.newDtos = newDtos;
         this.commentList = commentList;
+        this.image = image;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

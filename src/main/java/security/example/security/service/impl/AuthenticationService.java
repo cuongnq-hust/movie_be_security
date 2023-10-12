@@ -1,4 +1,4 @@
-package security.example.security.service;
+package security.example.security.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +15,7 @@ import security.example.security.model.Role;
 import security.example.security.model.User;
 import security.example.security.repository.RoleCustomRepo;
 import security.example.security.repository.UserRepository;
+import security.example.security.service.UserService;
 
 import java.util.*;
 
@@ -26,28 +27,38 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final RoleCustomRepo roleCustomRepo;
     private final UserService userService;
-    public ResponseEntity<?> register(RegisterRequest registerRequest){
+
+    public ResponseEntity<?> register(RegisterRequest registerRequest) {
         try {
-            if(userRepository.existsById(registerRequest.getEmail().toString())){
-                throw new IllegalArgumentException("User with " + registerRequest.getEmail().toString()+ "email already");
+            if (userRepository.existsById(registerRequest.getEmail().toString())) {
+                throw new IllegalArgumentException("User with " + registerRequest.getEmail().toString() + "email already");
             }
-            userService.saveUser(new User(registerRequest.getMobile_number(),registerRequest.getUser_name(),registerRequest.getEmail(),registerRequest.getPassword(), new HashSet<>(), new ArrayList<>(),new ArrayList<>(),new ArrayList<>()));
-            userService.addToUser(registerRequest.getEmail(),"ROLE_USER"); // defautl role
+            userService.saveUser(
+                    new User(registerRequest.getMobile_number(),
+                            registerRequest.getUser_name(),
+                            registerRequest.getEmail(),
+                            registerRequest.getPassword(),
+                            new HashSet<>(),
+                            new ArrayList<>(),
+                            new ArrayList<>(),
+                            registerRequest.getImage()));
+            userService.addToUser(registerRequest.getEmail(), "ROLE_USER"); // defautl role
             User user = userRepository.findByEmail(registerRequest.getEmail()).orElseThrow();
             System.out.println("dang ky thanh cong");
             return ResponseEntity.ok(user);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-    public ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest){
+
+    public ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest) {
         try {
-            User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(()->new NoSuchElementException("User not found"));
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),authenticationRequest.getPassword()));
+            User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(() -> new NoSuchElementException("User not found"));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
             List<Role> roles = null;
-            if(user!=null){
+            if (user != null) {
                 roles = roleCustomRepo.getRole(user);
             }
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -67,11 +78,11 @@ public class AuthenticationService {
                     .email(user.getEmail())
                     .user_name(user.getUser_name())
                     .build());
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (BadCredentialsException e){
+        } catch (BadCredentialsException e) {
             return ResponseEntity.badRequest().body("Invalid Credential");
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
         }
     }

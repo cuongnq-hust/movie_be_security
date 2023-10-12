@@ -4,26 +4,38 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import security.example.security.model.Comment;
-import security.example.security.service.impl.CommentServiceImpl;
+import security.example.security.service.impl.CommentImpl;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/comment")
 public class CommentController {
-    private final CommentServiceImpl commentService;
+    private final CommentImpl comment;
 
-    public CommentController(CommentServiceImpl commentService) {
-        this.commentService = commentService;
+    public CommentController(CommentImpl comment) {
+        this.comment = comment;
     }
-    @PostMapping("/newComment/{id}")
-    public ResponseEntity<Comment> addComment(@RequestBody String body  ,@RequestHeader(name = "Authorization") String accessToken,@PathVariable Long id){
-        Comment comment = commentService.saveComment(body, accessToken, id);
-        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
+    @PostMapping("/{id}")
+    public ResponseEntity<Comment> createComment(@RequestParam String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken){
+        Comment newcomment = comment.addComment(body,id,accessToken);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newcomment);
     }
-    @GetMapping("/list/{newId}")
-    public List<Comment> getCommentList(@PathVariable Long newId){
-//        System.out.println("list la" + newId);
-        return commentService.findListCommentByNewid(newId);
+    @GetMapping("/findByReviewId/{id}")
+    private List<Comment> getReviewByMovieId(@PathVariable Long id){
+        return comment.findReviewByReviewId(id);
+    }
+    @PostMapping("delete/{id}")
+    private void deleteCommentByid(@PathVariable Long id){
+        comment.deleteComment(id);
+    }
+    @PostMapping("update/{id}")
+    private ResponseEntity<Comment> updateCommentById(@RequestParam String body,@PathVariable Long id,@RequestHeader(name = "Authorization") String accessToken){
+        Comment update = comment.updateCommentById(body, id, accessToken);
+        return ResponseEntity.status(HttpStatus.CREATED).body(update);
+    }
+    @PostMapping("/deleteByReviewId/{id}")
+    public void deleteCommentsByReviewId(@PathVariable Long id) {
+        comment.deleteCommentByReviewId(id);
     }
 }

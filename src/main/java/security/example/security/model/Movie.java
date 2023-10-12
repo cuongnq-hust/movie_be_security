@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -26,56 +25,39 @@ public class Movie {
     private Long id;
 
     private String title;
-
     private String trailerLink;
-
     private String poster;
-    @Column(length = 1000)
-    private String backdrops;
-    private String genres;
+    private String avatar;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private CategoryMovie categoryMovie;
     @JsonIgnore
     @OneToMany(mappedBy = "movie")
     private List<Review> reviews = new ArrayList<>();
-
     private Date create_At;
     private Date update_At;
 
-    public Movie(Long id, String title, String trailerLink, String poster, String backdrops, String genres, List<Review> reviews, Date create_At, Date update_At) {
+    public Movie() {
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public Movie(Long id, String title, String trailerLink, String poster, String avatar, CategoryMovie categoryMovie, List<Review> reviews, Date create_At, Date update_At) {
         this.id = id;
         this.title = title;
         this.trailerLink = trailerLink;
         this.poster = poster;
-        this.backdrops = backdrops;
-        this.genres = genres;
+        this.avatar = avatar;
+        this.categoryMovie = categoryMovie;
         this.reviews = reviews;
         this.create_At = create_At;
         this.update_At = update_At;
-    }
-
-    public Movie() {
-    }
-    public List<String> getBackdrops() {
-        return Arrays.asList(backdrops.split(";"));
-    }
-
-    public void setBackdrops(List<String> backdrops) {
-        this.backdrops = String.join(";", backdrops);
-    }
-
-    public List<String> getGenres() {
-        return Arrays.asList(genres.split(";"));
-    }
-
-    public void setGenres(List<String> genres) {
-        this.genres = String.join(";", genres);
-    }
-
-    public String getPoster() {
-        return poster;
-    }
-
-    public void setPoster(String poster) {
-        this.poster = poster;
     }
 
     public Long getId() {
@@ -102,12 +84,28 @@ public class Movie {
         this.trailerLink = trailerLink;
     }
 
-    public List<Review> getReviews() {
-        return reviews;
+    public String getPoster() {
+        return poster;
     }
 
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public CategoryMovie getCategoryMovie() {
+        return categoryMovie;
+    }
+
+    public void setCategoryMovie(CategoryMovie categoryMovie) {
+        this.categoryMovie = categoryMovie;
     }
 
     public Date getCreate_At() {
@@ -125,5 +123,4 @@ public class Movie {
     public void setUpdate_At(Date update_At) {
         this.update_At = update_At;
     }
-
 }
