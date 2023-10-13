@@ -17,7 +17,7 @@ public class CommentController {
         this.comment = comment;
     }
     @PostMapping("/{id}")
-    public ResponseEntity<Comment> createComment(@RequestParam String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken){
+    public ResponseEntity<Comment> createComment(@RequestBody String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken){
         Comment newcomment = comment.addComment(body,id,accessToken);
         return ResponseEntity.status(HttpStatus.CREATED).body(newcomment);
     }
@@ -30,7 +30,7 @@ public class CommentController {
         comment.deleteComment(id);
     }
     @PostMapping("update/{id}")
-    private ResponseEntity<Comment> updateCommentById(@RequestParam String body,@PathVariable Long id,@RequestHeader(name = "Authorization") String accessToken){
+    private ResponseEntity<Comment> updateCommentById(@RequestBody String body,@PathVariable Long id,@RequestHeader(name = "Authorization") String accessToken){
         Comment update = comment.updateCommentById(body, id, accessToken);
         return ResponseEntity.status(HttpStatus.CREATED).body(update);
     }
