@@ -72,4 +72,9 @@ public class ReviewServiceImpl implements ReviewService {
         System.out.println("Update Thanh Cong");
         return reviewRepository.save(review);
     }
+
+    @Override
+    public Review findReviewById(Long id) {
+        return reviewRepository.findReviewById(id);
+    }
 }

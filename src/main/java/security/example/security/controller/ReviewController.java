@@ -21,7 +21,7 @@ public class ReviewController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Review> createReview(@RequestParam String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken){
+    public ResponseEntity<Review> createReview(@RequestBody String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken){
         Review addedReview = reviewService.saveReview(body, id, accessToken);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedReview);
     }
@@ -35,8 +35,13 @@ public class ReviewController {
         reviewService.deteleReview(id);
     }
     @PostMapping("update/{id}")
-    private ResponseEntity<Review> updateReviewByid(@RequestParam String body,@PathVariable Long id,@RequestHeader(name = "Authorization") String accessToken){
+    private ResponseEntity<Review> updateReviewByid(@RequestBody String body,@PathVariable Long id,@RequestHeader(name = "Authorization") String accessToken){
         Review update = reviewService.updateReviewById(body, id, accessToken);
         return ResponseEntity.status(HttpStatus.CREATED).body(update);
+    }
+    @GetMapping("review/{id}")
+    private ResponseEntity<Review> getReviewByid(@PathVariable Long id){
+        Review review = reviewService.findReviewById(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(review);
     }
 }
