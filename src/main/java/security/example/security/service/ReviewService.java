@@ -12,4 +12,6 @@ public interface ReviewService {
     void deteleReview(Long id);
 
     Review updateReviewById(String body, Long id,String accessToken);
+
+    Review findReviewById(Long id);
 }
