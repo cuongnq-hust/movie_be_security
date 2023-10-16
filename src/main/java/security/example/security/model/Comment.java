@@ -22,9 +22,12 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String body;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id", nullable = false)
     private Review review;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_name", nullable = false)
     private User user;

@@ -21,7 +21,7 @@ public class ReviewController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Review> createReview(@RequestBody String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken){
+    public ResponseEntity<Review> createReview(@PathVariable Long id, @RequestBody String body, @RequestHeader(name = "Authorization") String accessToken) {
         Review addedReview = reviewService.saveReview(body, id, accessToken);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedReview);
     }

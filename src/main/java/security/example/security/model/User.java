@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import security.example.security.model.request.Cart;
 
 import java.util.*;
 
@@ -45,6 +46,9 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Cart> carts = new ArrayList<>();
     private String image;
 
     private Date create_At;
@@ -53,7 +57,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String mobile_number, String user_name, String email, String password, Set<Role> roles, List<Review> reviews,List<Comment> commentList, String image) {
+    public User(String mobile_number, String user_name, String email, String password, Set<Role> roles, List<Review> reviews,List<Comment> commentList, String image,List<Cart> carts) {
         this.user_id = email;
         this.mobile_number = mobile_number;
         this.user_name = user_name;
@@ -63,7 +67,10 @@ public class User implements UserDetails {
         this.reviews = reviews;
         this.commentList = commentList;
         this.image = image;
+        this.carts = carts;
+
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
