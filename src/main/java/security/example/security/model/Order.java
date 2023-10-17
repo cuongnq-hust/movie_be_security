@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "comments")
-public class Comment {
+@Table(name = "orders")
+public class Order {
+
+
     @PrePersist
     protected void onCreate() {
         this.create_At = new Date(System.currentTimeMillis());
@@ -16,32 +18,27 @@ public class Comment {
     protected void onUpdate() {
         this.update_At = new Date(System.currentTimeMillis());
     }
+
     private Date create_At;
     private Date update_At;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String body;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id", nullable = false)
-    private Review review;
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_name", nullable = false)
     private User user;
+    @OneToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+    public Order() {
 
-    public Comment() {
     }
-
-    public Comment(Date create_At, Date update_At, Long id, String body, Review review, User user) {
+    public Order(Date create_At, Date update_At, Long id, User user, Cart cart) {
         this.create_At = create_At;
         this.update_At = update_At;
         this.id = id;
-        this.body = body;
-        this.review = review;
         this.user = user;
+        this.cart = cart;
     }
 
     public Date getCreate_At() {
@@ -68,27 +65,19 @@ public class Comment {
         this.id = id;
     }
 
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public Review getReview() {
-        return review;
-    }
-
-    public void setReview(Review review) {
-        this.review = review;
-    }
-
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

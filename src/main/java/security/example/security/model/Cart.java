@@ -2,11 +2,13 @@ package security.example.security.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "comments")
-public class Comment {
+@Table(name = "cart")
+public class Cart {
     @PrePersist
     protected void onCreate() {
         this.create_At = new Date(System.currentTimeMillis());
@@ -16,32 +18,34 @@ public class Comment {
     protected void onUpdate() {
         this.update_At = new Date(System.currentTimeMillis());
     }
+
     private Date create_At;
     private Date update_At;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String body;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id", nullable = false)
-    private Review review;
-
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CartItem> cartItems = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_name", nullable = false)
     private User user;
+    @OneToOne(mappedBy = "cart")
+    private Order order;
 
-    public Comment() {
+    public Cart() {
     }
+    private int total;
+    private boolean statusPay=false;
 
-    public Comment(Date create_At, Date update_At, Long id, String body, Review review, User user) {
+    public Cart(Date create_At, Date update_At, Long id, List<CartItem> cartItems, User user, int total, boolean statusPay) {
         this.create_At = create_At;
         this.update_At = update_At;
         this.id = id;
-        this.body = body;
-        this.review = review;
+        this.cartItems = cartItems;
         this.user = user;
+        this.total = total;
+        this.statusPay = statusPay;
     }
 
     public Date getCreate_At() {
@@ -68,20 +72,12 @@ public class Comment {
         this.id = id;
     }
 
-    public String getBody() {
-        return body;
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public Review getReview() {
-        return review;
-    }
-
-    public void setReview(Review review) {
-        this.review = review;
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 
     public User getUser() {
@@ -91,4 +87,21 @@ public class Comment {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public boolean isStatusPay() {
+        return statusPay;
+    }
+
+    public void setStatusPay(boolean statusPay) {
+        this.statusPay = statusPay;
+    }
+
 }

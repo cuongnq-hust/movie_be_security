@@ -28,12 +28,18 @@ public class Movie {
     private String trailerLink;
     private String poster;
     private String avatar;
+    private int price;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryMovie categoryMovie;
     @JsonIgnore
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CartItem> cartItems = new ArrayList<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "movie")
     private List<Review> reviews = new ArrayList<>();
+
+
     private Date create_At;
     private Date update_At;
 
@@ -48,13 +54,15 @@ public class Movie {
         this.reviews = reviews;
     }
 
-    public Movie(Long id, String title, String trailerLink, String poster, String avatar, CategoryMovie categoryMovie, List<Review> reviews, Date create_At, Date update_At) {
+    public Movie(Long id, String title, String trailerLink, String poster, String avatar, int price, CategoryMovie categoryMovie, List<CartItem> cartItems, List<Review> reviews, Date create_At, Date update_At) {
         this.id = id;
         this.title = title;
         this.trailerLink = trailerLink;
         this.poster = poster;
         this.avatar = avatar;
+        this.price = price;
         this.categoryMovie = categoryMovie;
+        this.cartItems = cartItems;
         this.reviews = reviews;
         this.create_At = create_At;
         this.update_At = update_At;
@@ -122,5 +130,13 @@ public class Movie {
 
     public void setUpdate_At(Date update_At) {
         this.update_At = update_At;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }
