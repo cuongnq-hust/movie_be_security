@@ -2,7 +2,6 @@ package security.example.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import security.example.security.model.request.CartItem;
 
 import java.util.ArrayList;
 import java.util.Date;
