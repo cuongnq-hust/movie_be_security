@@ -42,8 +42,8 @@ public class AuthenticationService {
                             new ArrayList<>(),
                             new ArrayList<>(),
                             registerRequest.getImage(),
-                            new ArrayList<>()
-                    ));
+                            new ArrayList<>(),
+                            new ArrayList<>()));
             userService.addToUser(registerRequest.getEmail(), "ROLE_USER"); // defautl role
             User user = userRepository.findByEmail(registerRequest.getEmail()).orElseThrow();
             System.out.println("dang ky thanh cong");

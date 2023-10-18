@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import security.example.security.model.request.Cart;
 
 import java.util.*;
 
@@ -49,6 +48,9 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Cart> carts = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
     private String image;
 
     private Date create_At;
@@ -57,7 +59,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String mobile_number, String user_name, String email, String password, Set<Role> roles, List<Review> reviews,List<Comment> commentList, String image,List<Cart> carts) {
+    public User(String mobile_number, String user_name, String email, String password, Set<Role> roles, List<Review> reviews,List<Comment> commentList, String image,List<Cart> carts,List<Order> orders) {
         this.user_id = email;
         this.mobile_number = mobile_number;
         this.user_name = user_name;
@@ -68,7 +70,7 @@ public class User implements UserDetails {
         this.commentList = commentList;
         this.image = image;
         this.carts = carts;
-
+        this.orders = orders;
     }
 
 
