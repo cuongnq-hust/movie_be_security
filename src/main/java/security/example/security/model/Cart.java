@@ -38,12 +38,13 @@ public class Cart {
     private int total;
     private boolean statusPay=false;
 
-    public Cart(Date create_At, Date update_At, Long id, List<CartItem> cartItems, User user, int total, boolean statusPay) {
+    public Cart(Date create_At, Date update_At, Long id, List<CartItem> cartItems, User user, Order order, int total, boolean statusPay) {
         this.create_At = create_At;
         this.update_At = update_At;
         this.id = id;
         this.cartItems = cartItems;
         this.user = user;
+        this.order = order;
         this.total = total;
         this.statusPay = statusPay;
     }
@@ -88,6 +89,14 @@ public class Cart {
         this.user = user;
     }
 
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
     public int getTotal() {
         return total;
     }
@@ -103,5 +112,4 @@ public class Cart {
     public void setStatusPay(boolean statusPay) {
         this.statusPay = statusPay;
     }
-
 }

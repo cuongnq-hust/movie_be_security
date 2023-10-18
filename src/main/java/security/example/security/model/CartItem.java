@@ -2,8 +2,6 @@ package security.example.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import security.example.security.model.Cart;
-import security.example.security.model.Movie;
 
 
 @Entity

@@ -35,14 +35,6 @@ public class CategoryMovie {
     public CategoryMovie() {
     }
 
-    public CategoryMovie(Long id, String title, List<Movie> movies, Date create_At, Date update_At) {
-        this.id = id;
-        this.title = title;
-        this.movies = movies;
-        this.create_At = create_At;
-        this.update_At = update_At;
-    }
-
     public CategoryMovie(String title) {
         this.title = title;
     }
@@ -86,5 +78,4 @@ public class CategoryMovie {
     public void setUpdate_At(Date update_At) {
         this.update_At = update_At;
     }
-
 }

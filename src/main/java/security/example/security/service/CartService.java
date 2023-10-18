@@ -1,14 +1,12 @@
 package security.example.security.service;
 
 import security.example.security.model.Cart;
-import security.example.security.model.CartItem;
 
-import java.util.List;
 
 public interface CartService {
-    String addToCart(Long id, int quantity, String accessToken, Long idCart);
+    String addToCart(Long id, int quantity, String accessToken);
 
-    void deleteCartItem(Long id, Long idCart, String accessToken);
+    void deleteCartItem(Long id, String accessToken);
 
     Cart getCartNow(String accessToken);
 

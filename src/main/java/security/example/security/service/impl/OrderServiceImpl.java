@@ -29,7 +29,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public String createOrder(Long idCart, String accessToken) {
+    public String createOrder(String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
@@ -38,18 +38,16 @@ public class OrderServiceImpl implements OrderService {
 
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
-        Cart cartNow = cartRepository.findCartById(idCart);
-        if (cartNow.getUser().getEmail().equals(userName)){
-            cartRepository.updateCartToOrder(idCart);
-            Cart cart = cartRepository.findCartById(idCart);
+        Cart cartNow = cartRepository.findCartByUserNameCart(userName);
+
+            cartRepository.updateCartToOrder(cartNow.getId());
+
+            Cart cart = cartRepository.findCartById(cartNow.getId());
             Order order = new Order();
             order.setUser(user);
             order.setCart(cart);
             orderRepository.save(order);
             System.out.println("tao order thanh cong");
-        }else {
-            System.out.println("Ban Khong Phai Chu So Huu");
-        }
         return null;
     }
 }

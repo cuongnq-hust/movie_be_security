@@ -46,7 +46,7 @@ public class CartServiceImpl implements CartService {
 //    }
 
     @Override
-    public String addToCart(Long id, int quantity, String accessToken, Long idCart) {
+    public String addToCart(Long id, int quantity, String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
@@ -56,10 +56,10 @@ public class CartServiceImpl implements CartService {
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
 
-        Cart cart = cartRepository.findCartById(idCart);
+        Cart cart = cartRepository.findCartByUserNameCart(userName);
 
         if (cart != null){
-            List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(idCart);
+            List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
 
             for (CartItem cartItem: cartItemList){
                 if (cartItem.getMovie().getId().equals(id)){
@@ -82,7 +82,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCartItem(Long id, Long idCart, String accessToken) {
+    public void deleteCartItem(Long id, String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
@@ -92,8 +92,8 @@ public class CartServiceImpl implements CartService {
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
 
-        Cart cart = cartRepository.findCartById(idCart);
-        List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(idCart);
+        Cart cart = cartRepository.findCartByUserNameCart(userName);
+        List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
         for (CartItem cartItem : cartItemList) {
             if (cartItem.getMovie().getId() == id) {
                 cartItemRepository.delete(cartItem);
