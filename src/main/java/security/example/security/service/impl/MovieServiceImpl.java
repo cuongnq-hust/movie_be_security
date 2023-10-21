@@ -1,6 +1,7 @@
 package security.example.security.service.impl;
 
 import org.springframework.stereotype.Service;
+import security.example.security.dto.MovieDto;
 import security.example.security.model.CategoryMovie;
 import security.example.security.model.Movie;
 import security.example.security.repository.CategoryRepository;
@@ -20,13 +21,14 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Movie saveMovie(String title, String trailerLink,String poster, String avatar, Long category_id) {
-        CategoryMovie categoryMovie = categoryRepository.findCategoryMovieById(category_id);
+    public Movie saveMovie(MovieDto movieDto) {
+        CategoryMovie categoryMovie = categoryRepository.findCategoryMovieById(movieDto.getCategory_id());
         Movie movieNew = new Movie();
-        movieNew.setTitle(title);
-        movieNew.setTrailerLink(trailerLink);
-        movieNew.setPoster(poster);
-        movieNew.setAvatar(avatar);
+        movieNew.setTitle(movieDto.getTitle());
+        movieNew.setTrailerLink(movieDto.getTrailerLink());
+        movieNew.setPoster(movieDto.getPoster());
+        movieNew.setAvatar(movieDto.getAvatar());
+        movieNew.setPrice(movieNew.getPrice());
         movieNew.setCategoryMovie(categoryMovie);
         System.out.println("Them movie thang cong");
         return movieRepository.save(movieNew);

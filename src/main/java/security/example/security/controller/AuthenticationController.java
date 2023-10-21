@@ -49,7 +49,7 @@ public class AuthenticationController {
             @RequestHeader(name = "Authorization") String accessToken,
             @RequestBody String userName,
             @RequestBody String mobile_number,
-            @RequestPart("file") MultipartFile file, @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request
+            @RequestPart("image") MultipartFile file, @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request
     ) {
 
         String fileName = null;
