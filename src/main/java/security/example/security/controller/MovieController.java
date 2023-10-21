@@ -3,6 +3,7 @@ package security.example.security.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import security.example.security.dto.MovieDto;
 import security.example.security.model.Movie;
 import security.example.security.model.request.UploadFileRequest;
 import security.example.security.service.impl.AwsS3ServiceImpl;
@@ -23,20 +24,22 @@ public class MovieController {
 
     @PostMapping("/new")
     public Movie createMovie(
-            @RequestBody String title,
-            @RequestBody String trailerLink,
-            @RequestPart("avatar") MultipartFile avatar,
-            @RequestPart("poster") MultipartFile poster,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request,
-            @RequestBody Long category_id) {
-        String avatarNew = null;
-        String posterNew = null;
-        try {
-            avatarNew = awsS3Service.uploadFile(avatar, request);
-            posterNew = awsS3Service.uploadFile(poster, request);
-        } catch (Exception e) {
-        }
-        return movieService.saveMovie(title, trailerLink, posterNew, avatarNew, category_id);
+            @RequestBody MovieDto movieDto
+//            @RequestPart("avatar") MultipartFile avatar,
+//            @RequestPart("poster") MultipartFile poster,
+//            @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request
+    ) {
+        System.out.println("dayy l;a" + movieDto);
+//        String avatarNew = null;
+//        String posterNew = null;
+//        try {
+//            avatarNew = awsS3Service.uploadFile(avatar, request);
+//            posterNew = awsS3Service.uploadFile(poster, request);
+//        } catch (Exception e) {
+//        }
+//        movieDto.setAvatar(avatarNew);
+//        movieDto.setPoster(posterNew);
+        return movieService.saveMovie(movieDto);
     }
 
     @GetMapping("/all")

@@ -28,7 +28,7 @@ public class Movie {
     private String trailerLink;
     private String poster;
     private String avatar;
-    private int price;
+    private float price;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryMovie categoryMovie;
@@ -132,11 +132,19 @@ public class Movie {
         this.update_At = update_At;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }
