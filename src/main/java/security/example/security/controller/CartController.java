@@ -18,13 +18,13 @@ public class CartController {
     }
 
     @PostMapping("/new")
-    public String createCart(@RequestParam Long id,
-                             @RequestParam int quantity,
+    public String createCart(@RequestBody Long id,
+                             @RequestBody int quantity,
                              @RequestHeader(name = "Authorization") String accessToken) {
         return cartService.addToCart(id, quantity, accessToken);
     }
     @PostMapping("/deleteItem")
-    public void deleteCartItem(@RequestParam Long id,
+    public void deleteCartItem(@RequestBody Long id,
                                @RequestHeader(name = "Authorization") String accessToken
     ){
         cartService.deleteCartItem(id, accessToken);

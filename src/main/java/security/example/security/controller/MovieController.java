@@ -23,12 +23,12 @@ public class MovieController {
 
     @PostMapping("/new")
     public Movie createMovie(
-            @RequestParam String title,
-            @RequestParam String trailerLink,
+            @RequestBody String title,
+            @RequestBody String trailerLink,
             @RequestPart("avatar") MultipartFile avatar,
             @RequestPart("poster") MultipartFile poster,
             @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request,
-            @RequestParam Long category_id) {
+            @RequestBody Long category_id) {
         String avatarNew = null;
         String posterNew = null;
         try {
