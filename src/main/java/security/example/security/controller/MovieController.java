@@ -29,7 +29,6 @@ public class MovieController {
 //            @RequestPart("poster") MultipartFile poster,
 //            @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request
     ) {
-        System.out.println("dayy l;a" + movieDto);
 //        String avatarNew = null;
 //        String posterNew = null;
 //        try {

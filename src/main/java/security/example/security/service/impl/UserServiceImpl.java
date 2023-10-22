@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import security.example.security.dto.UserDto;
 import security.example.security.model.Role;
 import security.example.security.model.User;
 import security.example.security.repository.RoleRepository;
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(String userName, String image, String mobile_number, String token) {
+    public User updateUser(UserDto userDto, String token) {
         String jwtToken = token;
         String decodedToken = jwtToken.replace("Bearer ", ""); // Loại bỏ tiền tố "Bearer " nếu có
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
@@ -78,9 +79,9 @@ public class UserServiceImpl implements UserService {
         List<String> roles = jwt.getClaim("roles").asList(String.class);
         User user = userRepository.findByEmail(userNameByToken)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userNameByToken));
-        user.setUser_name(userName);
-        user.setImage(image);
-        user.setMobile_number(mobile_number);
+        user.setUser_name(userDto.getUser_name());
+        user.setImage(userDto.getImage());
+        user.setMobile_number(userDto.getMobile_number());
         System.out.println("update thanh cong");
 
         return userRepository.save(user);

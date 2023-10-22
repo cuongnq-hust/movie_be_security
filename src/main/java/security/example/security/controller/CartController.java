@@ -1,6 +1,7 @@
 package security.example.security.controller;
 
 import org.springframework.web.bind.annotation.*;
+import security.example.security.dto.CartItemDto;
 import security.example.security.model.Cart;
 import security.example.security.service.impl.CartServiceImpl;
 import security.example.security.service.impl.OrderServiceImpl;
@@ -18,10 +19,9 @@ public class CartController {
     }
 
     @PostMapping("/new")
-    public String createCart(@RequestBody Long id,
-                             @RequestBody int quantity,
+    public String createItem(@RequestBody CartItemDto cartItemDto,
                              @RequestHeader(name = "Authorization") String accessToken) {
-        return cartService.addToCart(id, quantity, accessToken);
+        return cartService.addToCart(cartItemDto, accessToken);
     }
     @PostMapping("/deleteItem")
     public void deleteCartItem(@RequestBody Long id,

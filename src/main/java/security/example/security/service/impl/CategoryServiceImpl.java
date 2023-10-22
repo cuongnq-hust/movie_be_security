@@ -1,6 +1,7 @@
 package security.example.security.service.impl;
 
 import org.springframework.stereotype.Service;
+import security.example.security.dto.CategoryDto;
 import security.example.security.model.CategoryMovie;
 import security.example.security.repository.CategoryRepository;
 import security.example.security.service.CategoryService;
@@ -16,9 +17,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryMovie saveCategory(String title) {
+    public CategoryMovie saveCategory(CategoryDto categoryDto) {
         CategoryMovie categoryMovie1 = new CategoryMovie();
-        categoryMovie1.setTitle(title);
+        categoryMovie1.setTitle(categoryDto.getTitle());
         System.out.println("Them Category Thanh Cong");
         return categoryRepository.save(categoryMovie1);
     }
@@ -30,9 +31,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryMovie updateCategory(Long id, String title) {
+    public CategoryMovie updateCategory(Long id, CategoryDto categoryDto) {
         CategoryMovie categoryMovie = categoryRepository.findCategoryMovieById(id);
-        categoryMovie.setTitle(title);
+        categoryMovie.setTitle(categoryDto.getTitle());
         System.out.println("Update Thanh Cong Category");
         return categoryRepository.save(categoryMovie);
     }

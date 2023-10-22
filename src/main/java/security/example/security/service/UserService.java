@@ -1,5 +1,6 @@
 package security.example.security.service;
 
+import security.example.security.dto.UserDto;
 import security.example.security.model.Role;
 import security.example.security.model.User;
 
@@ -10,5 +11,5 @@ public interface UserService {
 
     User getUserByToken(String token);
 
-    User updateUser(String userName, String image, String mobile_number, String token);
+    User updateUser(UserDto userDto, String token);
 }
