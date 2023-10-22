@@ -1,10 +1,11 @@
 package security.example.security.service;
 
+import security.example.security.dto.CartItemDto;
 import security.example.security.model.Cart;
 
 
 public interface CartService {
-    String addToCart(Long id, int quantity, String accessToken);
+    String addToCart(CartItemDto cartItemDto, String accessToken);
 
     void deleteCartItem(Long id, String accessToken);
 

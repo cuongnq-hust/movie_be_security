@@ -2,6 +2,7 @@ package security.example.security.service.impl;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Service;
+import security.example.security.dto.CartItemDto;
 import security.example.security.model.Movie;
 import security.example.security.model.User;
 import security.example.security.model.Cart;
@@ -46,7 +47,7 @@ public class CartServiceImpl implements CartService {
 //    }
 
     @Override
-    public String addToCart(Long id, int quantity, String accessToken) {
+    public String addToCart(CartItemDto cartItemDto, String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
@@ -62,18 +63,18 @@ public class CartServiceImpl implements CartService {
             List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
 
             for (CartItem cartItem: cartItemList){
-                if (cartItem.getMovie().getId().equals(id)){
-                    cartItem.setQuantity(quantity);
+                if (cartItem.getMovie().getId().equals(cartItemDto.getMovieId())){
+                    cartItem.setQuantity(cartItemDto.getQuantity());
                     cartItemRepository.save(cartItem);
                     return "";
                 }
             }
 
-            Movie movie = movieRepository.findMovieById(id);
+            Movie movie = movieRepository.findMovieById(cartItemDto.getMovieId());
             CartItem cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setMovie(movie);
-            cartItem.setQuantity(quantity);
+            cartItem.setQuantity(cartItem.getQuantity());
             cartItemRepository.save(cartItem);
             return "";
         }else {
