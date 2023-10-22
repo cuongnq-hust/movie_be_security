@@ -28,7 +28,7 @@ public class MovieServiceImpl implements MovieService {
         movieNew.setTrailerLink(movieDto.getTrailerLink());
         movieNew.setPoster(movieDto.getPoster());
         movieNew.setAvatar(movieDto.getAvatar());
-        movieNew.setPrice(movieNew.getPrice());
+        movieNew.setPrice(movieDto.getPrice());
         movieNew.setCategoryMovie(categoryMovie);
         System.out.println("Them movie thang cong");
         return movieRepository.save(movieNew);
