@@ -1,10 +1,9 @@
 package security.example.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,10 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 
 @Entity
-@Getter
-@Setter
 @Data
 @Table(name = "Users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements UserDetails {
     @PrePersist
     protected void onCreate() {
@@ -33,26 +31,32 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String mobile_number;
-    @ManyToMany
-    @JoinTable(name = "user_role",
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "Role_id")
     )
     private Set<Role> roles = new HashSet<>();
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<Review> reviews = new ArrayList<>();
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<Comment> commentList = new ArrayList<>();
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<Cart> carts = new ArrayList<>();
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders = new ArrayList<>();
-    private String image;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cart> carts = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
+
+    private String image;
     private Date create_At;
     private Date update_At;
 
@@ -73,12 +77,11 @@ public class User implements UserDetails {
         this.orders = orders;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        roles.stream().forEach(i -> authorities.add(new SimpleGrantedAuthority(i.getName())));
-        return List.of(new SimpleGrantedAuthority(authorities.toString()));
+        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+        return authorities;
     }
 
     @Override

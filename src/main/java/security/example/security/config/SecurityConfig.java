@@ -27,6 +27,8 @@ public class SecurityConfig { //phan quyen
         http.authorizeRequests()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/v1/**").permitAll()
+//                .requestMatchers("/api/v1/auth/**").permitAll()
+//                .requestMatchers("/api/v1/category/**").hasAnyAuthority("ROLE_ADMIN")
                 .and()
                 .csrf().disable()
                 .cors(Customizer.withDefaults())
@@ -38,4 +40,5 @@ public class SecurityConfig { //phan quyen
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 }

@@ -1,14 +1,16 @@
 package security.example.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "orders")
+@Data
 public class Order {
-
-
     @PrePersist
     protected void onCreate() {
         this.create_At = new Date(System.currentTimeMillis());
@@ -19,25 +21,62 @@ public class Order {
         this.update_At = new Date(System.currentTimeMillis());
     }
 
-    private Date create_At;
-    private Date update_At;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private boolean isPay = false;
+
+    @JsonIgnoreProperties("user")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_name", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private Cart cart;
-    public Order() {
 
+    private Date create_At;
+    private Date update_At;
+
+    public Order() {
     }
-    public Order(Date create_At, Date update_At, Long id, User user, Cart cart) {
-        this.create_At = create_At;
-        this.update_At = update_At;
-        this.id = id;
+
+    public Order(boolean isPay, User user, Cart cart) {
+        this.isPay = isPay;
         this.user = user;
+        this.cart = cart;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean isPay() {
+        return isPay;
+    }
+
+    public void setPay(boolean pay) {
+        isPay = pay;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
         this.cart = cart;
     }
 
@@ -55,29 +94,5 @@ public class Order {
 
     public void setUpdate_At(Date update_At) {
         this.update_At = update_At;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 }
