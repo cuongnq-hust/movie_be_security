@@ -113,7 +113,7 @@ public class CartServiceImpl implements CartService {
         List<Cart> cartList = cartRepository.findCartByUserName(userName);
         if (cartList.isEmpty()) {
             Cart cart = createNewCart(user);
-            System.out.println("Đã tạo giỏ hàng mới");
+            System.out.println("Đã tạo giỏ hàng mới asfsafas");
             return cart;
         } else {
             return cartList.get(0);
