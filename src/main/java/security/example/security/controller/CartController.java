@@ -1,10 +1,15 @@
 package security.example.security.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import security.example.security.dto.CartItemDto;
+import security.example.security.dto.OrderDto;
 import security.example.security.model.Cart;
+import security.example.security.model.Order;
 import security.example.security.service.impl.CartServiceImpl;
 import security.example.security.service.impl.OrderServiceImpl;
+
+import java.util.List;
 
 
 @RestController
@@ -19,8 +24,9 @@ public class CartController {
     }
 
     @PostMapping("/new")
-    public String createItem(@RequestBody CartItemDto cartItemDto,
-                             @RequestHeader(name = "Authorization") String accessToken) {
+    public Cart createItem(@RequestBody CartItemDto cartItemDto,
+                               @RequestHeader(name = "Authorization") String accessToken) {
+//        System.out.println("vao la" + cartItemDto);
         return cartService.addToCart(cartItemDto, accessToken);
     }
     @PostMapping("/deleteItem")
@@ -39,7 +45,16 @@ public class CartController {
 //    }
 
     @PostMapping("/updateOrder")
-    public String createOrder(@RequestHeader(name = "Authorization") String accessToken){
+    public Order createOrder(@RequestHeader(name = "Authorization") String accessToken){
         return orderService.createOrder(accessToken);
+    }
+    @PostMapping("/payOrder/{orderId}")
+    public ResponseEntity<Void> payOrder(@PathVariable Long orderId) {
+        orderService.checkOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/listOrder/{orderId}")
+    public OrderDto findOrderById(@PathVariable Long orderId) {
+        return orderService.findOrderById(orderId);
     }
 }

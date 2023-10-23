@@ -15,6 +15,7 @@ import security.example.security.service.CartService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -47,7 +48,7 @@ public class CartServiceImpl implements CartService {
 //    }
 
     @Override
-    public String addToCart(CartItemDto cartItemDto, String accessToken) {
+    public Cart addToCart(CartItemDto cartItemDto, String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
@@ -58,7 +59,6 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
 
         Cart cart = cartRepository.findCartByUserNameCart(userName);
-
         if (cart != null){
             List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
 
@@ -66,19 +66,18 @@ public class CartServiceImpl implements CartService {
                 if (cartItem.getMovie().getId().equals(cartItemDto.getMovieId())){
                     cartItem.setQuantity(cartItemDto.getQuantity());
                     cartItemRepository.save(cartItem);
-                    return "";
+                    return cart;
                 }
             }
-
             Movie movie = movieRepository.findMovieById(cartItemDto.getMovieId());
             CartItem cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setMovie(movie);
-            cartItem.setQuantity(cartItem.getQuantity());
+            cartItem.setQuantity(cartItemDto.getQuantity());
             cartItemRepository.save(cartItem);
-            return "";
+            return cart;
         }else {
-            return "";
+            throw new IllegalArgumentException("Cart not found");
         }
     }
 
@@ -92,7 +91,6 @@ public class CartServiceImpl implements CartService {
 
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
-
         Cart cart = cartRepository.findCartByUserNameCart(userName);
         List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
         for (CartItem cartItem : cartItemList) {
@@ -108,17 +106,24 @@ public class CartServiceImpl implements CartService {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
-        Date expiresAt = jwt.getExpiresAt();
-        List<String> roles = jwt.getClaim("roles").asList(String.class);
+
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
+
         List<Cart> cartList = cartRepository.findCartByUserName(userName);
-        if (cartList.size() == 0) {
-            Cart cart = new Cart();
-            cart.setUser(user);
-            return cartRepository.save(cart);
+        if (cartList.isEmpty()) {
+            Cart cart = createNewCart(user);
+            System.out.println("Đã tạo giỏ hàng mới");
+            return cart;
         } else {
             return cartList.get(0);
         }
     }
+
+    private Cart createNewCart(User user) {
+        Cart cart = new Cart();
+        cart.setUser(user);
+        return cartRepository.save(cart);
+    }
+
 }

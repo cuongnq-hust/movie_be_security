@@ -3,6 +3,8 @@ package security.example.security.service.impl;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import security.example.security.converter.OrderConverter;
+import security.example.security.dto.OrderDto;
 import security.example.security.model.Cart;
 import security.example.security.model.Order;
 import security.example.security.model.User;
@@ -19,17 +21,19 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
+    private final OrderConverter orderConverter;
 
-    public OrderServiceImpl(JwtService jwtService, UserRepository userRepository, CartRepository cartRepository, OrderRepository orderRepository) {
+    public OrderServiceImpl(JwtService jwtService, UserRepository userRepository, CartRepository cartRepository, OrderRepository orderRepository, OrderConverter orderConverter) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.cartRepository = cartRepository;
         this.orderRepository = orderRepository;
+        this.orderConverter = orderConverter;
     }
 
     @Override
     @Transactional
-    public String createOrder(String accessToken) {
+    public Order createOrder(String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
@@ -46,8 +50,22 @@ public class OrderServiceImpl implements OrderService {
             Order order = new Order();
             order.setUser(user);
             order.setCart(cart);
-            orderRepository.save(order);
             System.out.println("tao order thanh cong");
-        return null;
+        return orderRepository.save(order);
     }
+    @Transactional
+    @Override
+    public void checkOrder(Long orderId) {
+        orderRepository.checkOrder(orderId);
+        System.out.println("tao check thanh cong");
+    }
+
+    @Override
+    public OrderDto findOrderById(Long orderId) {
+        Order order = orderRepository.findOrderById(orderId);
+        OrderDto orderDto = orderConverter.toOrderDTO(order);
+        return orderDto;
+    }
+
+
 }
