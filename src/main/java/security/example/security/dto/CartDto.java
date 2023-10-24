@@ -6,17 +6,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import security.example.security.model.User;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto {
+public class CartDto {
     private Long id;
-    private boolean isPay = false;
     private Date create_At;
     private Date update_At;
+    private List<CartItemDto> cartItems = new ArrayList<>(); // Sử dụng CartItemDto thay vì CartItem
     private User user;
-    private Long cartId;
+    private int total;
+    private boolean statusPay;
 }
+   

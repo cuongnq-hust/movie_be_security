@@ -50,8 +50,8 @@ public class MovieController {
     public Movie findMovieById(@PathVariable Long id) {
         return movieService.findMovieById(id);
     }
-    @GetMapping("/findByName")
-    public List<Movie> findMovieByTitle(@RequestBody String title) {
+    @GetMapping("/findByName/{title}")
+    public List<Movie> findMovieByTitle(@PathVariable String title) {
         List<Movie> movies = movieService.findMovieByName(title);
         return movies;
     }
@@ -60,4 +60,5 @@ public class MovieController {
         List<Movie> movies = movieService.findMovieByCategoryId(id);
         return movies;
     }
+
 }

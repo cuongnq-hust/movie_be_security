@@ -7,8 +7,9 @@ import security.example.security.model.Order;
 public class OrderConverter {
     public OrderDto toOrderDTO(Order order) {
         OrderDto orderDTO = new OrderDto();
+        orderDTO.setId(order.getId());
         orderDTO.setPay(order.isPay());
-        orderDTO.setUserName(order.getUser().getUser_name());
+        orderDTO.setUser(order.getUser());
         orderDTO.setCartId(order.getCart().getId());
         orderDTO.setCreate_At(order.getCreate_At());
         orderDTO.setUpdate_At(order.getUpdate_At());

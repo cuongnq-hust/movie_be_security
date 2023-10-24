@@ -11,4 +11,6 @@ public interface OrderService {
     void checkOrder(Long orderId);
 
     OrderDto findOrderById(Long orderId);
+
+    List<OrderDto> findListOrderByUsername(String accessToken);
 }

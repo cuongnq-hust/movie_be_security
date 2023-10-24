@@ -20,23 +20,30 @@ public class Cart {
     }
 
     private Date create_At;
+
     private Date update_At;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> cartItems = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_name", nullable = false)
     private User user;
+
     @OneToOne(mappedBy = "cart")
     private Order order;
 
+    private int total;
+
+    private boolean statusPay = false;
+
     public Cart() {
     }
-    private int total;
-    private boolean statusPay=false;
+
 
     public Cart(Date create_At, Date update_At, Long id, List<CartItem> cartItems, User user, Order order, int total, boolean statusPay) {
         this.create_At = create_At;
