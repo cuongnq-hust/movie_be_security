@@ -23,10 +23,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
     @Query(value = """
-        select * from orders ord where ord.user_name = :user_name 
+        select * from orders ord where ord.user_id = :user_name 
         """
             , countQuery = """
-        select count(ord.id) from orders ord where ord.user_name = :user_name
+        select count(ord.id) from orders ord where ord.user_id = :user_name
         """, nativeQuery = true)
     List<Order> findOrderByName(@Param("user_name") String user_name);
 

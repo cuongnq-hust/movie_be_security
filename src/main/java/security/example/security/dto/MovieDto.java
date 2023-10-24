@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MovieDto {
+    private Long id;
     private String title;
     private String trailerLink;
     private String poster;

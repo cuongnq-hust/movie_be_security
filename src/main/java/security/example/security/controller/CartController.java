@@ -2,9 +2,11 @@ package security.example.security.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import security.example.security.dto.CartDto;
 import security.example.security.dto.CartItemDto;
 import security.example.security.dto.OrderDto;
 import security.example.security.model.Cart;
+import security.example.security.model.Movie;
 import security.example.security.model.Order;
 import security.example.security.service.impl.CartServiceImpl;
 import security.example.security.service.impl.OrderServiceImpl;
@@ -24,7 +26,7 @@ public class CartController {
     }
 
     @PostMapping("/new")
-    public Cart createItem(@RequestBody CartItemDto cartItemDto,
+    public CartDto createItem(@RequestBody CartItemDto cartItemDto,
                                @RequestHeader(name = "Authorization") String accessToken) {
 //        System.out.println("vao la" + cartItemDto);
         return cartService.addToCart(cartItemDto, accessToken);
@@ -44,7 +46,12 @@ public class CartController {
 //        return cartService.createCart(accessToken);
 //    }
 
-    @PostMapping("/updateOrder")
+    @GetMapping("/findCartByid/{cartId}")
+    public CartDto findCartById(@PathVariable Long cartId) {
+        return cartService.getCartByIdCart(cartId);
+    }
+
+    @PostMapping("/createOrder")
     public Order createOrder(@RequestHeader(name = "Authorization") String accessToken){
         return orderService.createOrder(accessToken);
     }
@@ -53,8 +60,13 @@ public class CartController {
         orderService.checkOrder(orderId);
         return ResponseEntity.ok().build();
     }
-    @GetMapping("/listOrder/{orderId}")
+    @GetMapping("/orderDetail/{orderId}")
     public OrderDto findOrderById(@PathVariable Long orderId) {
         return orderService.findOrderById(orderId);
+    }
+
+    @GetMapping("/listOrder")
+    public List<OrderDto> findMovieByTitle(@RequestHeader(name = "Authorization") String accessToken) {
+        return orderService.findListOrderByUsername(accessToken);
     }
 }

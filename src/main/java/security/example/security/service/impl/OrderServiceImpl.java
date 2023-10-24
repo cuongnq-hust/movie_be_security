@@ -11,6 +11,7 @@ import security.example.security.model.User;
 import security.example.security.repository.*;
 import security.example.security.service.OrderService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,9 +44,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
         Cart cartNow = cartRepository.findCartByUserNameCart(userName);
-
             cartRepository.updateCartToOrder(cartNow.getId());
-
             Cart cart = cartRepository.findCartById(cartNow.getId());
             Order order = new Order();
             order.setUser(user);
@@ -65,6 +64,25 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findOrderById(orderId);
         OrderDto orderDto = orderConverter.toOrderDTO(order);
         return orderDto;
+    }
+
+    @Override
+    public List<OrderDto> findListOrderByUsername(String accessToken) {
+        String decodedToken = accessToken.replace("Bearer ", "");
+        DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
+        String userName = jwt.getSubject();
+        Date expiresAt = jwt.getExpiresAt();
+        List<String> roles = jwt.getClaim("roles").asList(String.class);
+
+        User user = userRepository.findByEmail(userName)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
+        List<Order> orders = orderRepository.findOrderByName(userName);
+        List<OrderDto> orderDtos = new ArrayList<>();
+        for (Order order : orders){
+            OrderDto orderDto = orderConverter.toOrderDTO(order);
+            orderDtos.add(orderDto);
+        }
+        return orderDtos;
     }
 
 

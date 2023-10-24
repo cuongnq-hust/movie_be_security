@@ -9,11 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 import security.example.security.auth.AuthenticationRequest;
 import security.example.security.auth.RegisterRequest;
 import security.example.security.dto.UserDto;
+import security.example.security.model.Role;
 import security.example.security.model.User;
 import security.example.security.model.request.UploadFileRequest;
 import security.example.security.service.impl.AuthenticationService;
 import security.example.security.service.impl.AwsS3ServiceImpl;
 import security.example.security.service.impl.UserServiceImpl;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -49,17 +52,12 @@ public class AuthenticationController {
     public User updateUserByToken(
             @RequestHeader(name = "Authorization") String accessToken,
             @RequestBody UserDto userDto
-//            @RequestPart("image") MultipartFile file, @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request
-
     ) {
-
-//        String fileName = null;
-//
-//        try {
-//            fileName = awsS3Service.uploadFile(file, request);
-//        } catch (Exception e) {
-//            // Xử lý ngoại lệ khi tải lên tập tin
-//        }
         return userService.updateUser(userDto, accessToken);
+    }
+
+    @GetMapping("/roles")
+    public List<Role> getUserRoles(@RequestHeader(name = "Authorization") String accessToken) {
+        return userService.getUserRolesByUsername(accessToken);
     }
 }

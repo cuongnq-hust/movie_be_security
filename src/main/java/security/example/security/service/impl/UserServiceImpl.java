@@ -86,6 +86,16 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(user);
     }
-
+    public List<Role> getUserRolesByUsername(String token) {
+        String jwtToken = token;
+        String decodedToken = jwtToken.replace("Bearer ", ""); // Loại bỏ tiền tố "Bearer " nếu có
+        DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
+        String userNameByToken = jwt.getSubject(); // Lấy subject (email) từ JWT
+        Date expiresAt = jwt.getExpiresAt(); // Lấy thời gian hết hạn của JWT
+        List<String> roles = jwt.getClaim("roles").asList(String.class);
+        User user = userRepository.findByEmail(userNameByToken)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userNameByToken));
+        return roleRepository.findUserRolesByEmail(userNameByToken);
+    }
 
 }
