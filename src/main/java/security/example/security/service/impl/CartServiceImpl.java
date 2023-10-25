@@ -3,10 +3,9 @@ package security.example.security.service.impl;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Service;
 import security.example.security.converter.CartConverter;
-import security.example.security.converter.MovieConverter;
+import security.example.security.converter.CartItemConverter;
 import security.example.security.dto.CartDto;
 import security.example.security.dto.CartItemDto;
-import security.example.security.dto.MovieDto;
 import security.example.security.model.Movie;
 import security.example.security.model.User;
 import security.example.security.model.Cart;
@@ -17,6 +16,7 @@ import security.example.security.repository.MovieRepository;
 import security.example.security.repository.UserRepository;
 import security.example.security.service.CartService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,16 +27,16 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
     private final CartConverter cartConverter;
-    private final MovieConverter movieConverter;
+    private final CartItemConverter cartItemConverter;
 
-    public CartServiceImpl(JwtService jwtService, UserRepository userRepository, MovieRepository movieRepository, CartItemRepository cartItemRepository, CartRepository cartRepository, CartConverter cartConverter, MovieConverter movieConverter) {
+    public CartServiceImpl(JwtService jwtService, UserRepository userRepository, MovieRepository movieRepository, CartItemRepository cartItemRepository, CartRepository cartRepository, CartConverter cartConverter, CartItemConverter cartItemConverter) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.movieRepository = movieRepository;
         this.cartItemRepository = cartItemRepository;
         this.cartRepository = cartRepository;
         this.cartConverter = cartConverter;
-        this.movieConverter = movieConverter;
+        this.cartItemConverter = cartItemConverter;
     }
 
     @Override
@@ -59,20 +59,20 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDto addToCart(CartItemDto cartItemDto, String accessToken) {
+    public Cart addToCart(CartItemDto cartItemDto, String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
         Cart cart = cartRepository.findCartByUserNameCart(userName);
-        if (cart != null) {
+
+        if (cart != null){
             List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
-            for (CartItem cartItem : cartItemList) {
-                if (cartItem.getMovie().getId().equals(cartItemDto.getMovieId())) {
+
+            for (CartItem cartItem: cartItemList){
+                if (cartItem.getMovie().getId().equals(cartItemDto.getMovieId())){
                     cartItem.setQuantity(cartItemDto.getQuantity());
                     cartItemRepository.save(cartItem);
-                    CartDto cartDto = cartConverter.toCartDto(cart);
-                    System.out.println("Cập nhật cart thành công");
-                    return cartDto;
+                    return cart;
                 }
             }
             Movie movie = movieRepository.findMovieById(cartItemDto.getMovieId());
@@ -81,12 +81,8 @@ public class CartServiceImpl implements CartService {
             cartItem.setMovie(movie);
             cartItem.setQuantity(cartItemDto.getQuantity());
             cartItemRepository.save(cartItem);
-            CartDto cartDto = cartConverter.toCartDto(cart);
-            System.out.println("Thêm vào cart thành công");
-            MovieDto movieDto = movieConverter.toDto(movie);
-            cartDto.getCartItems().get(cartDto.getCartItems().size() - 1).setMovie(movieDto);
-            return cartDto;
-        } else {
+            return cart;
+        }else {
             throw new IllegalArgumentException("Cart not found");
         }
     }
@@ -120,5 +116,14 @@ public class CartServiceImpl implements CartService {
         cart.setUser(user);
         return cartRepository.save(cart);
     }
-
+    @Override
+    public List<CartItemDto> findCartItemByCartId(Long cartId) {
+        List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cartId);
+        List<CartItemDto> cartItemDtoOutList = new ArrayList<>();
+        for (CartItem cartItem: cartItemList){
+            CartItemDto cartItemDtoOut = cartItemConverter.toDto(cartItem);
+            cartItemDtoOutList.add(cartItemDtoOut);
+        }
+        return cartItemDtoOutList;
+    }
 }

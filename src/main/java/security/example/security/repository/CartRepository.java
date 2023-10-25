@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import security.example.security.model.Cart;
+import security.example.security.model.CartItem;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,4 +37,10 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             , nativeQuery = true)
     void updateCartToOrder(@Param("idCart") Long idCart);
 
+
+    @Query(value = """
+            SELECT * FROM cartitem cai WHERE cai.cart_id = :cartId
+            """, nativeQuery = true)
+    List<CartItem> findCartItemByCartId(@Param("cartId") Long cartId);
 }
+
