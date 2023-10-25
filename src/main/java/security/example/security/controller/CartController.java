@@ -36,8 +36,8 @@ public class CartController {
 
         return cartService.addToCart(cartItemDto, accessToken);
     }
-    @PostMapping("/deleteItem")
-    public void deleteCartItem(@RequestBody Long id,
+    @PostMapping("/deleteItem/{id}")
+    public void deleteCartItem(@PathVariable Long id,
                                @RequestHeader(name = "Authorization") String accessToken
     ){
         cartService.deleteCartItem(id, accessToken);
