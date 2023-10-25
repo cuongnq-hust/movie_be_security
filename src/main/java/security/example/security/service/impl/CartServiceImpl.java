@@ -40,7 +40,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart getCartNow(String accessToken) {
+    public CartDto getCartNow(String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
@@ -51,15 +51,17 @@ public class CartServiceImpl implements CartService {
         List<Cart> cartList = cartRepository.findCartByUserName(userName);
         if (cartList.isEmpty()) {
             Cart cart = createNewCart(user);
+            CartDto cartDto = cartConverter.toCartDto(cart);
             System.out.println("Đã tạo giỏ hàng mới");
-            return cart;
+            return cartDto;
         } else {
-            return cartList.get(0);
+            CartDto cartDto = cartConverter.toCartDto(cartList.get(0));
+            return cartDto;
         }
     }
 
     @Override
-    public Cart addToCart(CartItemDto cartItemDto, String accessToken) {
+    public CartDto addToCart(CartItemDto cartItemDto, String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
@@ -72,11 +74,13 @@ public class CartServiceImpl implements CartService {
                 if (cartItem.getMovie().getId().equals(cartItemDto.getMovieId())){
                     if(cartItemDto.getQuantity() == 0){
                         deleteCartItem(cartItemDto.getMovieId(), accessToken);
-                        return cart;
+                        CartDto cartDto = cartConverter.toCartDto(cart);
+                        return cartDto;
                     }else {
                         cartItem.setQuantity(cartItemDto.getQuantity());
                         cartItemRepository.save(cartItem);
-                        return cart;
+                        CartDto cartDto = cartConverter.toCartDto(cart);
+                        return cartDto;
                     }
                 }
             }
@@ -86,14 +90,15 @@ public class CartServiceImpl implements CartService {
             cartItem.setMovie(movie);
             cartItem.setQuantity(cartItemDto.getQuantity());
             cartItemRepository.save(cartItem);
-            return cart;
+            CartDto cartDto = cartConverter.toCartDto(cart);
+            return cartDto;
         }else {
             throw new IllegalArgumentException("Cart not found");
         }
     }
 
     @Override
-    public void deleteCartItem(Long id, String accessToken) {
+    public CartDto deleteCartItem(Long id, String accessToken) {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
@@ -105,6 +110,8 @@ public class CartServiceImpl implements CartService {
                 System.out.println("Xoa thanh cong");
             }
         }
+        CartDto cartDto = cartConverter.toCartDto(cart);
+        return cartDto;
     }
 
 
@@ -124,11 +131,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<CartItemDto> findCartItemByCartId(Long cartId) {
         List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cartId);
-        List<CartItemDto> cartItemDtoOutList = new ArrayList<>();
+        List<CartItemDto> cartItemDtoList = new ArrayList<>();
         for (CartItem cartItem: cartItemList){
             CartItemDto cartItemDtoOut = cartItemConverter.toDto(cartItem);
-            cartItemDtoOutList.add(cartItemDtoOut);
+            cartItemDtoList.add(cartItemDtoOut);
         }
-        return cartItemDtoOutList;
+        return cartItemDtoList;
     }
 }

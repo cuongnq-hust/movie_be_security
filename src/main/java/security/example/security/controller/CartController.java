@@ -25,22 +25,22 @@ public class CartController {
     }
 
     @GetMapping("/cartNow")
-    public Cart getCartNow(@RequestHeader(name = "Authorization") String accessToken){
+    public CartDto getCartNow(@RequestHeader(name = "Authorization") String accessToken){
         return cartService.getCartNow(accessToken);
     }
 
     @PostMapping("/new")
-    public Cart createItem(@RequestBody CartItemDto cartItemDto,
+    public CartDto createItem(@RequestBody CartItemDto cartItemDto,
                                @RequestHeader(name = "Authorization") String accessToken) {
 //        System.out.println("vao la" + cartItemDto);
 
         return cartService.addToCart(cartItemDto, accessToken);
     }
     @PostMapping("/deleteItem/{id}")
-    public void deleteCartItem(@PathVariable Long id,
+    public CartDto deleteCartItem(@PathVariable Long id,
                                @RequestHeader(name = "Authorization") String accessToken
     ){
-        cartService.deleteCartItem(id, accessToken);
+        return cartService.deleteCartItem(id, accessToken);
     }
 
     @GetMapping("/findCartByid/{cartId}")
