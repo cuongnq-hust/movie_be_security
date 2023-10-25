@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 import security.example.security.dto.CartItemDto;
 import security.example.security.model.CartItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class CartItemConverter {
     public CartItemDto toDto(CartItem cartItem){
@@ -12,5 +15,14 @@ public class CartItemConverter {
         CartItemDto.setQuantity(cartItem.getQuantity());
         CartItemDto.setMovieId(cartItem.getMovie().getId());
         return CartItemDto;
+    }
+
+    public List<CartItemDto> toDtoList(List<CartItem> cartItemList){
+        List<CartItemDto> dtoList = new ArrayList<>();
+        for (CartItem cartItem: cartItemList){
+            CartItemDto cartItemDto = toDto(cartItem);
+            dtoList.add(cartItemDto);
+        }
+        return dtoList;
     }
 }
