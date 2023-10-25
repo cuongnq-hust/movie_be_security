@@ -40,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
         String userName = jwt.getSubject();
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
+
         Date currentTime = new Date();
         Cart cartNow = cartRepository.findCartByUserNameCart(userName);
         cartNow.setUpdate_At(currentTime);

@@ -69,7 +69,6 @@ public class CartServiceImpl implements CartService {
 
         if (cart != null){
             List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
-
             for (CartItem cartItem: cartItemList){
                 if (cartItem.getMovie().getId().equals(cartItemDto.getMovieId())){
                     if(cartItemDto.getQuantity() == 0){
@@ -89,7 +88,9 @@ public class CartServiceImpl implements CartService {
             cartItem.setCart(cart);
             cartItem.setMovie(movie);
             cartItem.setQuantity(cartItemDto.getQuantity());
+
             cartItemRepository.save(cartItem);
+
             CartDto cartDto = cartConverter.toCartDto(cart);
             return cartDto;
         }else {
