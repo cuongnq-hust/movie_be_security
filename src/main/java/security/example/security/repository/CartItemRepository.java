@@ -18,8 +18,4 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
         select count(ci.id) from cartitem ci where ci.cart_id = :id
         """, nativeQuery = true)
     List<CartItem> findCartItemByCartId(@Param("id") Long id);
-
-    @Modifying
-    @Query(value = "DELETE FROM cartitem ci WHERE ci.moive_id = :id", nativeQuery = true)
-    void deleteCartItemByMovieId(@Param("id") Long id);
 }

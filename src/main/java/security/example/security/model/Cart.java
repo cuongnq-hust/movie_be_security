@@ -37,7 +37,7 @@ public class Cart {
     @OneToOne(mappedBy = "cart")
     private Order order;
 
-    private int total;
+    private float total;
 
     private boolean statusPay = false;
 
@@ -104,11 +104,11 @@ public class Cart {
         this.order = order;
     }
 
-    public int getTotal() {
+    public float getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(float total) {
         this.total = total;
     }
 
