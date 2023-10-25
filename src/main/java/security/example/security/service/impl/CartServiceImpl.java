@@ -70,9 +70,14 @@ public class CartServiceImpl implements CartService {
 
             for (CartItem cartItem: cartItemList){
                 if (cartItem.getMovie().getId().equals(cartItemDto.getMovieId())){
-                    cartItem.setQuantity(cartItemDto.getQuantity());
-                    cartItemRepository.save(cartItem);
-                    return cart;
+                    if(cartItemDto.getQuantity() == 0){
+                        deleteCartItem(cartItemDto.getMovieId(), accessToken);
+                        return cart;
+                    }else {
+                        cartItem.setQuantity(cartItemDto.getQuantity());
+                        cartItemRepository.save(cartItem);
+                        return cart;
+                    }
                 }
             }
             Movie movie = movieRepository.findMovieById(cartItemDto.getMovieId());
