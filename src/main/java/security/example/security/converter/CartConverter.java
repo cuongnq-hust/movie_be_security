@@ -11,7 +11,7 @@ public class CartConverter {
         cartDto.setId(cart.getId());
         cartDto.setCreate_At(cart.getCreate_At());
         cartDto.setUpdate_At(cart.getUpdate_At());
-//        cartDto.setCartItems(cart.getCartItems());
+        cartDto.setCartItems(cart.getCartItems());
         cartDto.setUser(cart.getUser());
         cartDto.setTotal(cart.getTotal());
         cartDto.setStatusPay(cart.isStatusPay());

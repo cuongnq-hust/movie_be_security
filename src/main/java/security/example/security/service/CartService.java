@@ -3,11 +3,12 @@ package security.example.security.service;
 import security.example.security.dto.CartDto;
 import security.example.security.dto.CartItemDto;
 import security.example.security.model.Cart;
-import security.example.security.model.CartItem;
+
+import java.util.List;
 
 
 public interface CartService {
-    CartDto addToCart(CartItemDto cartItemDto, String accessToken);
+    Cart addToCart(CartItemDto cartItemDto, String accessToken);
 
     void deleteCartItem(Long id, String accessToken);
 
@@ -15,5 +16,5 @@ public interface CartService {
 
     CartDto getCartByIdCart(Long idCart);
 
-//    Cart createCart(String accessToken);
+    List<CartItemDto> findCartItemByCartId(Long cartId);
 }

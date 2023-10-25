@@ -38,23 +38,27 @@ public class OrderServiceImpl implements OrderService {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
-        Date expiresAt = jwt.getExpiresAt();
-        List<String> roles = jwt.getClaim("roles").asList(String.class);
-
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
+        Date currentTime = new Date();
         Cart cartNow = cartRepository.findCartByUserNameCart(userName);
-            cartRepository.updateCartToOrder(cartNow.getId());
-            Cart cart = cartRepository.findCartById(cartNow.getId());
-            Order order = new Order();
-            order.setUser(user);
-            order.setCart(cart);
-            System.out.println("tao order thanh cong");
+        cartNow.setUpdate_At(currentTime);
+        cartRepository.save(cartNow);
+        cartRepository.updateCartToOrder(cartNow.getId());
+        Cart cart = cartRepository.findCartById(cartNow.getId());
+        Order order = new Order();
+        order.setUser(user);
+        order.setCart(cart);
+        System.out.println("tao order thanh cong");
         return orderRepository.save(order);
     }
     @Transactional
     @Override
     public void checkOrder(Long orderId) {
+        Date currentTime = new Date();
+        Order order = orderRepository.findOrderById(orderId);
+        order.setUpdate_At(currentTime);
+        orderRepository.save(order);
         orderRepository.checkOrder(orderId);
         System.out.println("tao check thanh cong");
     }
@@ -71,11 +75,6 @@ public class OrderServiceImpl implements OrderService {
         String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
-        Date expiresAt = jwt.getExpiresAt();
-        List<String> roles = jwt.getClaim("roles").asList(String.class);
-
-        User user = userRepository.findByEmail(userName)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
         List<Order> orders = orderRepository.findOrderByName(userName);
         List<OrderDto> orderDtos = new ArrayList<>();
         for (Order order : orders){
