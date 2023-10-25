@@ -66,18 +66,19 @@ public class CartServiceImpl implements CartService {
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userName = jwt.getSubject();
         Cart cart = cartRepository.findCartByUserNameCart(userName);
-
         if (cart != null){
             List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
             for (CartItem cartItem: cartItemList){
                 if (cartItem.getMovie().getId().equals(cartItemDto.getMovieId())){
                     if(cartItemDto.getQuantity() == 0){
                         deleteCartItem(cartItemDto.getMovieId(), accessToken);
+                        totalCart(cart.getId());
                         CartDto cartDto = cartConverter.toCartDto(cart);
                         return cartDto;
                     }else {
                         cartItem.setQuantity(cartItemDto.getQuantity());
                         cartItemRepository.save(cartItem);
+                        totalCart(cart.getId());
                         CartDto cartDto = cartConverter.toCartDto(cart);
                         return cartDto;
                     }
@@ -88,9 +89,8 @@ public class CartServiceImpl implements CartService {
             cartItem.setCart(cart);
             cartItem.setMovie(movie);
             cartItem.setQuantity(cartItemDto.getQuantity());
-
             cartItemRepository.save(cartItem);
-
+            totalCart(cart.getId());
             CartDto cartDto = cartConverter.toCartDto(cart);
             return cartDto;
         }else {
@@ -111,6 +111,7 @@ public class CartServiceImpl implements CartService {
                 System.out.println("Xoa thanh cong");
             }
         }
+        totalCart(cart.getId());
         CartDto cartDto = cartConverter.toCartDto(cart);
         return cartDto;
     }
@@ -128,6 +129,18 @@ public class CartServiceImpl implements CartService {
         Cart cart = new Cart();
         cart.setUser(user);
         return cartRepository.save(cart);
+    }
+    private Cart totalCart(Long idCart){
+        Cart cart = cartRepository.findCartById(idCart);
+        float total = 0;
+        List<CartItem> cartItemList = cart.getCartItems();
+        for (CartItem cartItem: cartItemList){
+            float total2 = cartItem.getQuantity()*cartItem.getMovie().getPrice();
+            total +=total2;
+        }
+        cart.setTotal(total);
+        cartRepository.save(cart);
+        return cart;
     }
     @Override
     public List<CartItemDto> findCartItemByCartId(Long cartId) {

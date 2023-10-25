@@ -30,12 +30,10 @@ public class CommentImpl implements CommentService {
 
     @Override
     public Comment addComment(String body, Long id, String accessToken) {
-        String decodedToken = accessToken.replace("Bearer ", ""); // Loại bỏ tiền tố "Bearer " nếu có
+        String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
 
         String userName = jwt.getSubject(); // Lấy subject (email) từ JWT
-        Date expiresAt = jwt.getExpiresAt(); // Lấy thời gian hết hạn của JWT
-        List<String> roles = jwt.getClaim("roles").asList(String.class);// Lấy danh sách vai trò từ JWT
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
         Review review = reviewRepository.findReviewById(id);
@@ -60,12 +58,10 @@ public class CommentImpl implements CommentService {
 
     @Override
     public Comment updateCommentById(String body, Long id, String accessToken) {
-        String decodedToken = accessToken.replace("Bearer ", ""); // Loại bỏ tiền tố "Bearer " nếu có
+        String decodedToken = accessToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
 
         String userName = jwt.getSubject(); // Lấy subject (email) từ JWT
-        Date expiresAt = jwt.getExpiresAt(); // Lấy thời gian hết hạn của JWT
-        List<String> roles = jwt.getClaim("roles").asList(String.class);// Lấy danh sách vai trò từ JWT
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
         Comment comment = commentRepository.findCommentById(id);

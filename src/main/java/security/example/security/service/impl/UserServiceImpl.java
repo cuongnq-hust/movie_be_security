@@ -14,7 +14,6 @@ import security.example.security.repository.RoleRepository;
 import security.example.security.repository.UserRepository;
 import security.example.security.service.UserService;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -58,11 +57,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByToken(String token) {
         String jwtToken = token;
-        String decodedToken = jwtToken.replace("Bearer ", ""); // Loại bỏ tiền tố "Bearer " nếu có
+        String decodedToken = jwtToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
-        String userName = jwt.getSubject(); // Lấy subject (email) từ JWT
-        Date expiresAt = jwt.getExpiresAt(); // Lấy thời gian hết hạn của JWT
-        List<String> roles = jwt.getClaim("roles").asList(String.class);
+        String userName = jwt.getSubject();
         System.out.println("Da Lay Ra Thong Tin Cua "+userName);
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
@@ -75,8 +72,6 @@ public class UserServiceImpl implements UserService {
         String decodedToken = jwtToken.replace("Bearer ", ""); // Loại bỏ tiền tố "Bearer " nếu có
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
         String userNameByToken = jwt.getSubject(); // Lấy subject (email) từ JWT
-        Date expiresAt = jwt.getExpiresAt(); // Lấy thời gian hết hạn của JWT
-        List<String> roles = jwt.getClaim("roles").asList(String.class);
         User user = userRepository.findByEmail(userNameByToken)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userNameByToken));
         user.setUser_name(userDto.getUser_name());
@@ -88,13 +83,9 @@ public class UserServiceImpl implements UserService {
     }
     public List<Role> getUserRolesByUsername(String token) {
         String jwtToken = token;
-        String decodedToken = jwtToken.replace("Bearer ", ""); // Loại bỏ tiền tố "Bearer " nếu có
+        String decodedToken = jwtToken.replace("Bearer ", "");
         DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
-        String userNameByToken = jwt.getSubject(); // Lấy subject (email) từ JWT
-        Date expiresAt = jwt.getExpiresAt(); // Lấy thời gian hết hạn của JWT
-        List<String> roles = jwt.getClaim("roles").asList(String.class);
-        User user = userRepository.findByEmail(userNameByToken)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userNameByToken));
+        String userNameByToken = jwt.getSubject();
         return roleRepository.findUserRolesByEmail(userNameByToken);
     }
 

@@ -10,11 +10,12 @@ import java.util.List;
 @Component
 public class CartItemConverter {
     public CartItemDto toDto(CartItem cartItem){
-        CartItemDto CartItemDto = new CartItemDto();
-        CartItemDto.setCartId(cartItem.getCart().getId());
-        CartItemDto.setQuantity(cartItem.getQuantity());
-        CartItemDto.setMovieId(cartItem.getMovie().getId());
-        return CartItemDto;
+        CartItemDto cartItemDto = new CartItemDto();
+        cartItemDto.setCartId(cartItem.getCart().getId());
+        cartItemDto.setQuantity(cartItem.getQuantity());
+        cartItemDto.setMovieId(cartItem.getMovie().getId());
+        cartItemDto.setPrice(cartItem.getMovie().getPrice());
+        return cartItemDto;
     }
 
     public List<CartItemDto> toDtoList(List<CartItem> cartItemList){

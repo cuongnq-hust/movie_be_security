@@ -50,6 +50,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setCart(cart);
+        order.setTotal(cart.getTotal());
+        order.setTax(cart.getTotal()/10);
+        order.setFee(cart.getTotal()/20);
         System.out.println("tao order thanh cong");
         return orderRepository.save(order);
     }

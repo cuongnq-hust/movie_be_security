@@ -13,4 +13,5 @@ public class CartItemDto {
     private int quantity;
     private Long movieId;
     private Long cartId;
+    private float price;
 }

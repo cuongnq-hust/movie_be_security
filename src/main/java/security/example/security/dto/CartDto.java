@@ -20,7 +20,7 @@ public class CartDto {
     private Date update_At;
     private List<CartItemDto> cartItems = new ArrayList<>();
     private User user;
-    private int total;
+    private float total;
     private boolean statusPay;
 }
    
