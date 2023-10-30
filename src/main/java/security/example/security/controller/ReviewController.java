@@ -26,13 +26,14 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addedReview);
     }
     @GetMapping("/findReviewByMovieId/{id}")
-    private List<Review> getReviewByMovieId(@PathVariable Long id){
-        return reviewService.findReviewByMovieId(id);
+    private ResponseEntity<List<Review>> getReviewByMovieId(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.findReviewByMovieId(id));
     }
     @PostMapping("delete/{id}")
-    private void deleteReviewById(@PathVariable Long id){
+    private ResponseEntity<Void> deleteReviewById(@PathVariable Long id){
         comment.deleteCommentByReviewId(id);
         reviewService.deteleReview(id);
+        return ResponseEntity.ok().build();
     }
     @PostMapping("update/{id}")
     private ResponseEntity<Review> updateReviewByid(@RequestBody String body,@PathVariable Long id,@RequestHeader(name = "Authorization") String accessToken){

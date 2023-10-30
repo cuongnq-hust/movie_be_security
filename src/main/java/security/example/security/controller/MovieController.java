@@ -1,6 +1,7 @@
 package security.example.security.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import security.example.security.dto.MovieDto;
@@ -23,42 +24,28 @@ public class MovieController {
     }
 
     @PostMapping("/new")
-    public Movie createMovie(
+    public ResponseEntity<Movie> createMovie(
             @RequestBody MovieDto movieDto
-//            @RequestPart("avatar") MultipartFile avatar,
-//            @RequestPart("poster") MultipartFile poster,
-//            @io.swagger.v3.oas.annotations.parameters.RequestBody UploadFileRequest request
     ) {
-//        String avatarNew = null;
-//        String posterNew = null;
-//        try {
-//            avatarNew = awsS3Service.uploadFile(avatar, request);
-//            posterNew = awsS3Service.uploadFile(poster, request);
-//        } catch (Exception e) {
-//        }
-//        movieDto.setAvatar(avatarNew);
-//        movieDto.setPoster(posterNew);
-        return movieService.saveMovie(movieDto);
+        return ResponseEntity.ok(movieService.saveMovie(movieDto));
     }
 
     @GetMapping("/all")
-    private List<Movie> getAllMovie() {
-        return movieService.getAllMoview();
+    private ResponseEntity<List<Movie>> getAllMovie() {
+        return ResponseEntity.ok(movieService.getAllMoview());
     }
 
     @GetMapping("/{id}")
-    public Movie findMovieById(@PathVariable Long id) {
-        return movieService.findMovieById(id);
+    public ResponseEntity<Movie> findMovieById(@PathVariable Long id) {
+        return ResponseEntity.ok(movieService.findMovieById(id));
     }
     @GetMapping("/findByName/{title}")
-    public List<Movie> findMovieByTitle(@PathVariable String title) {
-        List<Movie> movies = movieService.findMovieByName(title);
-        return movies;
+    public ResponseEntity<List<Movie>> findMovieByTitle(@PathVariable String title) {
+        return ResponseEntity.ok(movieService.findMovieByName(title));
     }
     @GetMapping("/findByCategoryId/{id}")
-    public List<Movie> findMovieByTitle(@PathVariable Long id) {
-        List<Movie> movies = movieService.findMovieByCategoryId(id);
-        return movies;
+    public ResponseEntity<List<Movie>> findMovieByTitle(@PathVariable Long id) {
+        return ResponseEntity.ok(movieService.findMovieByCategoryId(id));
     }
 
 }

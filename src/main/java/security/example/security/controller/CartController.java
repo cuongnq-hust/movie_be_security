@@ -25,32 +25,32 @@ public class CartController {
     }
 
     @GetMapping("/cartNow")
-    public CartDto getCartNow(@RequestHeader(name = "Authorization") String accessToken){
-        return cartService.getCartNow(accessToken);
+    public ResponseEntity<CartDto> getCartNow(@RequestHeader(name = "Authorization") String accessToken){
+        return ResponseEntity.ok(cartService.getCartNow(accessToken));
     }
 
     @PostMapping("/new")
-    public CartDto createItem(@RequestBody CartItemDto cartItemDto,
+    public ResponseEntity<CartDto> createItem(@RequestBody CartItemDto cartItemDto,
                                @RequestHeader(name = "Authorization") String accessToken) {
 //        System.out.println("vao la" + cartItemDto);
 
-        return cartService.addToCart(cartItemDto, accessToken);
+        return ResponseEntity.ok(cartService.addToCart(cartItemDto, accessToken));
     }
     @PostMapping("/deleteItem/{id}")
-    public CartDto deleteCartItem(@PathVariable Long id,
+    public ResponseEntity<CartDto> deleteCartItem(@PathVariable Long id,
                                @RequestHeader(name = "Authorization") String accessToken
     ){
-        return cartService.deleteCartItem(id, accessToken);
+        return ResponseEntity.ok(cartService.deleteCartItem(id, accessToken));
     }
 
     @GetMapping("/findCartByid/{cartId}")
-    public CartDto findCartById(@PathVariable Long cartId) {
-        return cartService.getCartByIdCart(cartId);
+    public ResponseEntity<CartDto> findCartById(@PathVariable Long cartId) {
+        return ResponseEntity.ok(cartService.getCartByIdCart(cartId));
     }
 
     @PostMapping("/createOrder")
-    public Order createOrder(@RequestHeader(name = "Authorization") String accessToken){
-        return orderService.createOrder(accessToken);
+    public ResponseEntity<Order> createOrder(@RequestHeader(name = "Authorization") String accessToken){
+        return ResponseEntity.ok(orderService.createOrder(accessToken));
     }
     @PostMapping("/payOrder/{orderId}")
     public ResponseEntity<Void> payOrder(@PathVariable Long orderId) {
@@ -58,17 +58,17 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/orderDetail/{orderId}")
-    public OrderDto findOrderById(@PathVariable Long orderId) {
-        return orderService.findOrderById(orderId);
+    public ResponseEntity<OrderDto> findOrderById(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.findOrderById(orderId));
     }
 
     @GetMapping("/listOrder")
-    public List<OrderDto> findMovieByTitle(@RequestHeader(name = "Authorization") String accessToken) {
-        return orderService.findListOrderByUsername(accessToken);
+    public ResponseEntity<List<OrderDto>> findMovieByTitle(@RequestHeader(name = "Authorization") String accessToken) {
+        return ResponseEntity.ok(orderService.findListOrderByUsername(accessToken));
     }
 
     @GetMapping("/listCartItem/{cartId}")
-    private List<CartItemDto> findCartItemByCartId(@PathVariable Long cartId){
-        return cartService.findCartItemByCartId(cartId);
+    private ResponseEntity<List<CartItemDto>> findCartItemByCartId(@PathVariable Long cartId){
+        return ResponseEntity.ok(cartService.findCartItemByCartId(cartId));
     }
 }

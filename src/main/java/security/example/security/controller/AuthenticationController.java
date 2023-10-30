@@ -44,20 +44,20 @@ public class AuthenticationController {
     }
 
     @GetMapping("/user")
-    public User getUserByToken(@RequestHeader(name = "Authorization") String accessToken) {
-        return userService.getUserByToken(accessToken);
+    public ResponseEntity<User> getUserByToken(@RequestHeader(name = "Authorization") String accessToken) {
+        return ResponseEntity.ok(userService.getUserByToken(accessToken));
     }
 
     @PostMapping("/update")
-    public User updateUserByToken(
+    public ResponseEntity<User> updateUserByToken(
             @RequestHeader(name = "Authorization") String accessToken,
             @RequestBody UserDto userDto
     ) {
-        return userService.updateUser(userDto, accessToken);
+        return ResponseEntity.ok(userService.updateUser(userDto, accessToken));
     }
 
     @GetMapping("/roles")
-    public List<Role> getUserRoles(@RequestHeader(name = "Authorization") String accessToken) {
-        return userService.getUserRolesByUsername(accessToken);
+    public ResponseEntity<List<Role>> getUserRoles(@RequestHeader(name = "Authorization") String accessToken) {
+        return ResponseEntity.ok(userService.getUserRolesByUsername(accessToken));
     }
 }
