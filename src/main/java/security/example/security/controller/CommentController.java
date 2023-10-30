@@ -22,8 +22,8 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newcomment);
     }
     @GetMapping("/findByReviewId/{id}")
-    private List<Comment> getReviewByMovieId(@PathVariable Long id){
-        return comment.findReviewByReviewId(id);
+    private ResponseEntity<List<Comment>> getReviewByMovieId(@PathVariable Long id){
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment.findReviewByReviewId(id));
     }
     @PostMapping("delete/{id}")
     private void deleteCommentByid(@PathVariable Long id){
@@ -35,7 +35,8 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(update);
     }
     @PostMapping("/deleteByReviewId/{id}")
-    public void deleteCommentsByReviewId(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCommentsByReviewId(@PathVariable Long id) {
         comment.deleteCommentByReviewId(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -33,7 +33,8 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(updateCategory);
     }
     @GetMapping("/all")
-    public List<CategoryMovie> getAllCategory(){
-        return categoryService.getAllCategory();
+    public ResponseEntity<List<CategoryMovie>> getAllCategory(){
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.getAllCategory());
     }
 }
