@@ -14,9 +14,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class OrderDto {
     private Long id;
-    private boolean isPay = false;
-    private Date create_At;
-    private Date update_At;
-    private User user;
+    private int isPay;
     private Long cartId;
+    private float total;
+    private float tax;
+    private float fee;
 }

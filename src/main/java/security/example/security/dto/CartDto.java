@@ -16,11 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CartDto {
     private Long id;
-    private Date create_At;
-    private Date update_At;
-    private List<CartItemDto> cartItems = new ArrayList<>();
-    private User user;
     private float total;
-    private boolean statusPay;
+    private int statusPay;
 }
    

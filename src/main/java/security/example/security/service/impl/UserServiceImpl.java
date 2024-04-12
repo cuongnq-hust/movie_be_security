@@ -56,11 +56,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByToken(String token) {
-        String jwtToken = token;
-        String decodedToken = jwtToken.replace("Bearer ", "");
-        DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
+        DecodedJWT jwt = jwtService.decodeToken(token);
         String userName = jwt.getSubject();
-        System.out.println("Da Lay Ra Thong Tin Cua "+userName);
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
         return user;
@@ -68,23 +65,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(UserDto userDto, String token) {
-        String jwtToken = token;
-        String decodedToken = jwtToken.replace("Bearer ", ""); // Loại bỏ tiền tố "Bearer " nếu có
-        DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
-        String userNameByToken = jwt.getSubject(); // Lấy subject (email) từ JWT
+        DecodedJWT jwt = jwtService.decodeToken(token);
+        String userNameByToken = jwt.getSubject();
         User user = userRepository.findByEmail(userNameByToken)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userNameByToken));
         user.setUser_name(userDto.getUser_name());
         user.setImage(userDto.getImage());
         user.setMobile_number(userDto.getMobile_number());
-        System.out.println("update thanh cong");
-
         return userRepository.save(user);
     }
     public List<Role> getUserRolesByUsername(String token) {
-        String jwtToken = token;
-        String decodedToken = jwtToken.replace("Bearer ", "");
-        DecodedJWT jwt = jwtService.decodeToken(decodedToken, "123");
+        DecodedJWT jwt = jwtService.decodeToken(token);
         String userNameByToken = jwt.getSubject();
         return roleRepository.findUserRolesByEmail(userNameByToken);
     }

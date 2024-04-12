@@ -3,46 +3,49 @@ package security.example.security.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import security.example.security.model.Review;
-import security.example.security.service.impl.CommentImpl;
-import security.example.security.service.impl.ReviewServiceImpl;
+import security.example.security.dto.review.ReviewResponseDto;
+import security.example.security.service.impl.CommentService;
+import security.example.security.service.impl.ReviewService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/review")
 public class ReviewController {
-    private final ReviewServiceImpl reviewService;
-    private final CommentImpl comment;
+    private final ReviewService reviewService;
+    private final CommentService comment;
 
-    public ReviewController(ReviewServiceImpl reviewService, CommentImpl comment) {
+    public ReviewController(ReviewService reviewService, CommentService comment) {
         this.reviewService = reviewService;
         this.comment = comment;
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Review> createReview(@RequestBody String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken){
-        Review addedReview = reviewService.saveReview(body, id, accessToken);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedReview);
+    public ResponseEntity<Void> createReview(@RequestBody String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken) {
+        reviewService.saveReview(body, id, accessToken);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
     @GetMapping("/findReviewByMovieId/{id}")
-    private ResponseEntity<List<Review>> getReviewByMovieId(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.findReviewByMovieId(id));
+    private ResponseEntity<List<ReviewResponseDto>> getReviewByMovieId(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.findReviewByMovieId(id));
     }
-    @PostMapping("delete/{id}")
-    private ResponseEntity<Void> deleteReviewById(@PathVariable Long id){
-        comment.deleteCommentByReviewId(id);
+
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> deleteReviewById(@PathVariable Long id) {
+//        comment.deleteCommentByReviewId(id);
         reviewService.deteleReview(id);
         return ResponseEntity.ok().build();
     }
-    @PostMapping("update/{id}")
-    private ResponseEntity<Review> updateReviewByid(@RequestBody String body,@PathVariable Long id,@RequestHeader(name = "Authorization") String accessToken){
-        Review update = reviewService.updateReviewById(body, id, accessToken);
-        return ResponseEntity.status(HttpStatus.CREATED).body(update);
+
+    @PutMapping("/{id}")
+    private ResponseEntity<Void> updateReviewByid(@RequestBody String body, @PathVariable Long id) {
+        reviewService.updateReviewById(body, id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @GetMapping("review/{id}")
-    private ResponseEntity<Review> getReviewByid(@PathVariable Long id){
-        Review review = reviewService.findReviewById(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body(review);
+
+    @GetMapping("/{id}")
+    private ResponseEntity<ReviewResponseDto> getReviewByid(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.findReviewById(id));
     }
 }

@@ -3,40 +3,40 @@ package security.example.security.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import security.example.security.model.Comment;
-import security.example.security.service.impl.CommentImpl;
+import security.example.security.dto.comment.CommentResponseDto;
+import security.example.security.service.impl.CommentService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/comment")
 public class CommentController {
-    private final CommentImpl comment;
+    private final CommentService comment;
 
-    public CommentController(CommentImpl comment) {
+    public CommentController(CommentService comment) {
         this.comment = comment;
     }
+
     @PostMapping("/{id}")
-    public ResponseEntity<Comment> createComment(@RequestBody String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken){
-        Comment newcomment = comment.addComment(body,id,accessToken);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newcomment);
+    public ResponseEntity<Void> createComment(@RequestBody String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken) {
+        comment.addComment(body, id, accessToken);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
     @GetMapping("/findByReviewId/{id}")
-    private ResponseEntity<List<Comment>> getReviewByMovieId(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.CREATED).body(comment.findReviewByReviewId(id));
+    private ResponseEntity<List<CommentResponseDto>> getReviewByMovieId(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(comment.findReviewByReviewId(id));
     }
-    @PostMapping("delete/{id}")
-    private void deleteCommentByid(@PathVariable Long id){
+
+    @DeleteMapping("delete/{id}")
+    private void deleteCommentByid(@PathVariable Long id) {
         comment.deleteComment(id);
     }
-    @PostMapping("update/{id}")
-    private ResponseEntity<Comment> updateCommentById(@RequestBody String body,@PathVariable Long id,@RequestHeader(name = "Authorization") String accessToken){
-        Comment update = comment.updateCommentById(body, id, accessToken);
-        return ResponseEntity.status(HttpStatus.CREATED).body(update);
-    }
-    @PostMapping("/deleteByReviewId/{id}")
-    public ResponseEntity<Void> deleteCommentsByReviewId(@PathVariable Long id) {
-        comment.deleteCommentByReviewId(id);
+
+    @PutMapping("/{id}")
+    private ResponseEntity<Void> updateCommentById(@RequestBody String body, @PathVariable Long id) {
+        comment.updateCommentById(body, id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 }

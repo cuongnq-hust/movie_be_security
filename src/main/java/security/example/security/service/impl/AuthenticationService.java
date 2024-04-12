@@ -39,14 +39,9 @@ public class AuthenticationService {
                             registerRequest.getEmail(),
                             registerRequest.getPassword(),
                             new HashSet<>(),
-                            new ArrayList<>(),
-                            new ArrayList<>(),
-                            registerRequest.getImage(),
-                            new ArrayList<>(),
-                            new ArrayList<>()));
-            userService.addToUser(registerRequest.getEmail(), "ROLE_USER"); // defautl role
+                            registerRequest.getImage()));
+            userService.addToUser(registerRequest.getEmail(), "ROLE_USER");
             User user = userRepository.findByEmail(registerRequest.getEmail()).orElseThrow();
-            System.out.println("dang ky thanh cong");
             return ResponseEntity.ok(user);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -55,30 +50,34 @@ public class AuthenticationService {
         }
     }
 
-    public ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<?> login(AuthenticationRequest authenticationRequest) {
         try {
-            User user = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(() -> new NoSuchElementException("User not found"));
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
-            List<Role> roles = null;
-            if (user != null) {
-                roles = roleCustomRepo.getRole(user);
-            }
+            User user = userRepository.findByEmail(authenticationRequest.getEmail())
+                    .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+
+            List<Role> roles = roleCustomRepo.getRole(user);
+
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            Set<Role> set = new HashSet<>();
-            roles.stream().forEach(c -> {
-                set.add(new Role(c.getName()));
-                authorities.add(new SimpleGrantedAuthority(c.getName()));
+            Set<Role> roleSet = new HashSet<>();
+            roles.forEach(role -> {
+                roleSet.add(role);
+                authorities.add(new SimpleGrantedAuthority(role.getName()));
             });
-            user.setRoles(set);
-            set.stream().forEach(i -> authorities.add(new SimpleGrantedAuthority(i.getName())));
-            var jwtAccessToken = jwtService.generateToken(user, authorities);
-            var jwtRefershToken = jwtService.generateRefreshToken(user, authorities);
-            System.out.println("dang nhap thanh cong");
+
+            user.setRoles(roleSet);
+
+            String jwtAccessToken = jwtService.generateToken(user, authorities);
+            String jwtRefreshToken = jwtService.generateRefreshToken(user, authorities);
+
             return ResponseEntity.ok(AuthenticationResponse.builder()
                     .access_token(jwtAccessToken)
-                    .refresh_token(jwtRefershToken)
+                    .refresh_token(jwtRefreshToken)
                     .email(user.getEmail())
                     .user_name(user.getUser_name())
+                    .roles(roles)
                     .build());
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

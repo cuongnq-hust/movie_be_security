@@ -1,4 +1,4 @@
-package security.example.security.dto;
+package security.example.security.dto.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
+public class CategoryRequestDto {
+    private Long id;
     private String title;
 }

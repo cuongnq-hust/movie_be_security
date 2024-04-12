@@ -3,17 +3,16 @@ package security.example.security.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import security.example.security.model.Review;
+import security.example.security.entity.Review;
 
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     Review findReviewById(Long id);
+
     @Query(value = """
-        select * from reviews rv where rv.movie_id = :id
-        """
-            , countQuery = """
-        select count(rv.id) from reviews rv where rv.moive_id = :id
-        """, nativeQuery = true)
+            SELECT * FROM REVIEW rv where rv.MOVIE_ID = :id
+            AND rv.DELETE_FLAG = 0
+            """, nativeQuery = true)
     List<Review> findReviewByMovieId(@Param("id") Long id);
 }

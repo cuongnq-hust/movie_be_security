@@ -5,7 +5,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 
-import security.example.security.model.Movie;
+import security.example.security.entity.Movie;
+import security.example.security.dto.movie.MovieSearchDto;
 
 import java.util.List;
 
@@ -13,30 +14,17 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     Movie findMovieById(Long id);
 
+    @Query("SELECT mo FROM Movie mo "
+            + "WHERE mo.deleteFlag = 0 "
+            + "AND (:#{#searchModel.title} IS NULL OR mo.title LIKE %:#{#searchModel.title}%)"
+            + "ORDER BY mo.createdDate DESC")
+    List<Movie> findListMovies(@Param("searchModel") MovieSearchDto searchModel);
+
     @Query(value = """
-            select * from movies mv
-             """
-            , countQuery = """
-            select count(mv.id) from movies mv
-            where 1=1
+            SELECT * from MOVIE mv WHERE mv.CATEGORY_ID = :id
+            AND mv.DELETE_FLAG = 0 ORDER BY mv.CREATED_DATE DESC 
             """
             , nativeQuery = true)
-    List<Movie> findListMovies();
-
-    @Query(value = """
-            select * from movies mv where mv.title LIKE %:title%
-            """
-            , countQuery = """
-            select count(mv.id) from movies mv where mv.title LIKE %:title%
-            """, nativeQuery = true)
-    List<Movie> findMovieByTitle(@Param("title") String title);
-
-    @Query(value = """
-        select * from movies mv where mv.category_id = :id
-        """
-            , countQuery = """
-        select count(mv.id) from movies mv where mv.category_id = :id
-        """, nativeQuery = true)
     List<Movie> findMovieByCategoryId(@Param("id") Long id);
 
 

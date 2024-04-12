@@ -5,13 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import security.example.security.auth.AuthenticationRequest;
 import security.example.security.auth.RegisterRequest;
 import security.example.security.dto.UserDto;
 import security.example.security.model.Role;
 import security.example.security.model.User;
-import security.example.security.model.request.UploadFileRequest;
 import security.example.security.service.impl.AuthenticationService;
 import security.example.security.service.impl.AwsS3ServiceImpl;
 import security.example.security.service.impl.UserServiceImpl;
@@ -40,7 +38,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) {
-        return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+        return ResponseEntity.ok(authenticationService.login(authenticationRequest));
     }
 
     @GetMapping("/user")

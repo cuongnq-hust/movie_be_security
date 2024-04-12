@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import security.example.security.model.Cart;
-import security.example.security.model.Order;
-import security.example.security.model.Review;
+import security.example.security.entity.Order;
 
 import java.util.List;
 
@@ -15,7 +13,7 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     @Modifying
     @Query(value = """
-        UPDATE orders ord SET ord.is_pay = 1 WHERE ord.id = :idOrder
+        UPDATE ORDERS ord SET ord.IS_PAY = 1 WHERE ord.ID = :idOrder
         """
             , nativeQuery = true)
     void checkOrder(@Param("idOrder") Long idOrder);
@@ -23,11 +21,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
     @Query(value = """
-        select * from orders ord where ord.user_name = :user_name 
+        SELECT * FROM ORDERS ord WHERE ord.CREATED_BY = :user_name 
         """
-            , countQuery = """
-        select count(ord.id) from orders ord where ord.user_name = :user_name
-        """, nativeQuery = true)
+          , nativeQuery = true)
     List<Order> findOrderByName(@Param("user_name") String user_name);
 
     Order findOrderById(Long id);

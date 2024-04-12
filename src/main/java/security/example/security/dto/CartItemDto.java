@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemDto {
-    private int quantity;
     private Long movieId;
-    private Long cartId;
-    private float price;
+    private int quantity;
+    private String createdBy;
+    private String createdDate;
 }

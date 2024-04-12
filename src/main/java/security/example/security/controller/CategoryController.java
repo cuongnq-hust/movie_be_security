@@ -3,38 +3,52 @@ package security.example.security.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import security.example.security.dto.CategoryDto;
-import security.example.security.model.CategoryMovie;
-import security.example.security.service.impl.CategoryServiceImpl;
+import security.example.security.dto.category.CategorResponseDto;
+import security.example.security.dto.category.CategoryRequestDto;
+import security.example.security.entity.CategoryEntity;
+import security.example.security.dto.category.SearchCategoryDto;
+import security.example.security.service.impl.CategoryService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/category")
 public class CategoryController {
-    private final CategoryServiceImpl categoryService;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryServiceImpl categoryService) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
-    @PostMapping("/new")
-    public ResponseEntity<CategoryMovie> createCategory(@RequestBody CategoryDto categoryDto)  {
-        CategoryMovie addNewCategory = categoryService.saveCategory(categoryDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addNewCategory);
+
+    @PostMapping("/")
+    public ResponseEntity<Void> createCategory(@RequestBody CategoryRequestDto categoryRequestDto) throws Exception {
+        categoryService.createCategory(categoryRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    @PostMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id)  {
+
+    @PostMapping("/list")
+    public ResponseEntity<List<CategorResponseDto>> searchListCategory(@RequestBody SearchCategoryDto searchCategoryDto) throws Exception {
+        List<CategorResponseDto> categorResponseDtos = categoryService.searchCategoryRedis(searchCategoryDto);
+        if (categorResponseDtos == null) {
+            List<CategorResponseDto> categorResponseDtoList = categoryService.searchListCategory(searchCategoryDto);
+            categoryService.saveCategorys(searchCategoryDto, categorResponseDtoList);
+            return new ResponseEntity<>(categorResponseDtoList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(categorResponseDtos, HttpStatus.OK);
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<CategoryEntity> updateCategory(@RequestBody CategoryRequestDto categoryRequestDto) throws Exception {
+        categoryService.updateCategory(categoryRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) throws Exception {
         categoryService.deleteCategoryById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @PostMapping("/update/{id}")
-    public ResponseEntity<CategoryMovie> updateCategory(@RequestBody CategoryDto categoryDto, @PathVariable Long id)  {
-        CategoryMovie updateCategory = categoryService.updateCategory(id, categoryDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(updateCategory);
-    }
-    @GetMapping("/all")
-    public ResponseEntity<List<CategoryMovie>> getAllCategory(){
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.getAllCategory());
-    }
+
 }
