@@ -1,4 +1,4 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.RedisTemplate;

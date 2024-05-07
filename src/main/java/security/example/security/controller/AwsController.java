@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import security.example.security.model.request.UploadFileRequest;
-import security.example.security.service.impl.AwsS3ServiceImpl;
+import security.example.security.service.AwsS3ServiceImpl;
 
 
 @RestController

@@ -1,4 +1,4 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.modelmapper.ModelMapper;
@@ -8,7 +8,6 @@ import security.example.security.entity.Review;
 import security.example.security.dto.comment.CommentResponseDto;
 import security.example.security.repository.CommentRepository;
 import security.example.security.repository.ReviewRepository;
-import security.example.security.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,19 +17,17 @@ import java.util.stream.Collectors;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final ReviewRepository reviewRepository;
-    private final UserRepository userRepository;
     private final JwtService jwtService;
     private static final ModelMapper modelMapper = new ModelMapper();
 
-    public CommentService(CommentRepository commentRepository, ReviewRepository reviewRepository, UserRepository userRepository, JwtService jwtService) {
+    public CommentService(CommentRepository commentRepository, ReviewRepository reviewRepository, JwtService jwtService) {
         this.commentRepository = commentRepository;
         this.reviewRepository = reviewRepository;
-        this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
 
-    public void addComment(String body, Long id, String accessToken) {
-        DecodedJWT jwt = jwtService.decodeToken(accessToken);
+    public void addComment(String body, Long id) {
+        DecodedJWT jwt = jwtService.decodeToken();
         String userName = jwt.getSubject();
         Review review = reviewRepository.findReviewById(id);
         CommentEntity commentEntity = new CommentEntity();

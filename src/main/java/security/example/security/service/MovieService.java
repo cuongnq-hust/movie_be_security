@@ -1,4 +1,4 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

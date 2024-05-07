@@ -10,9 +10,9 @@ import security.example.security.auth.RegisterRequest;
 import security.example.security.dto.UserDto;
 import security.example.security.model.Role;
 import security.example.security.model.User;
-import security.example.security.service.impl.AuthenticationService;
-import security.example.security.service.impl.AwsS3ServiceImpl;
-import security.example.security.service.impl.UserServiceImpl;
+import security.example.security.service.AuthenticationService;
+import security.example.security.service.AwsS3ServiceImpl;
+import security.example.security.service.UserServiceImpl;
 
 import java.util.List;
 
@@ -42,20 +42,19 @@ public class AuthenticationController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<User> getUserByToken(@RequestHeader(name = "Authorization") String accessToken) {
-        return ResponseEntity.ok(userService.getUserByToken(accessToken));
+    public ResponseEntity<User> getUserByToken() {
+        return ResponseEntity.ok(userService.getUserByToken());
     }
 
     @PostMapping("/update")
     public ResponseEntity<User> updateUserByToken(
-            @RequestHeader(name = "Authorization") String accessToken,
             @RequestBody UserDto userDto
     ) {
-        return ResponseEntity.ok(userService.updateUser(userDto, accessToken));
+        return ResponseEntity.ok(userService.updateUser(userDto));
     }
 
     @GetMapping("/roles")
-    public ResponseEntity<List<Role>> getUserRoles(@RequestHeader(name = "Authorization") String accessToken) {
-        return ResponseEntity.ok(userService.getUserRolesByUsername(accessToken));
+    public ResponseEntity<List<Role>> getUserRoles() {
+        return ResponseEntity.ok(userService.getUserRolesByUsername());
     }
 }

@@ -1,4 +1,4 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.modelmapper.ModelMapper;
@@ -15,24 +15,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderServiceImpl {
+public class OrderService {
 
     private final JwtService jwtService;
-    private final UserRepository userRepository;
     private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
     private static final ModelMapper modelMapper = new ModelMapper();
 
-    public OrderServiceImpl(JwtService jwtService, UserRepository userRepository, CartRepository cartRepository, OrderRepository orderRepository) {
+    public OrderService(JwtService jwtService, CartRepository cartRepository, OrderRepository orderRepository) {
         this.jwtService = jwtService;
-        this.userRepository = userRepository;
         this.cartRepository = cartRepository;
         this.orderRepository = orderRepository;
     }
 
     @Transactional
-    public OrderDto createOrder(String accessToken) {
-        DecodedJWT jwt = jwtService.decodeToken(accessToken);
+    public OrderDto createOrder() {
+        DecodedJWT jwt = jwtService.decodeToken();
         String userName = jwt.getSubject();
 
         Cart cartNow = cartRepository.findCartByUserNameCart(userName);
@@ -57,8 +55,8 @@ public class OrderServiceImpl {
         return modelMapper.map(order, OrderDto.class);
     }
 
-    public List<OrderDto> findListOrderByUsername(String accessToken) {
-        DecodedJWT jwt = jwtService.decodeToken(accessToken);
+    public List<OrderDto> findListOrderByUsername() {
+        DecodedJWT jwt = jwtService.decodeToken();
         String userName = jwt.getSubject();
         List<Order> orders = orderRepository.findOrderByName(userName);
         return orders.stream().map(item -> modelMapper.map(item, OrderDto.class))

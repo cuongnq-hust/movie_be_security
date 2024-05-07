@@ -1,4 +1,4 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.modelmapper.ModelMapper;
@@ -29,8 +29,8 @@ public class ReviewService {
         this.jwtService = jwtService;
     }
 
-    public void saveReview(String body, Long id, String accessToken) {
-        DecodedJWT jwt = jwtService.decodeToken(accessToken);
+    public void saveReview(String body, Long id) {
+        DecodedJWT jwt = jwtService.decodeToken();
 
         String userName = jwt.getSubject();
         Movie movie = movieRepository.findMovieById(id);

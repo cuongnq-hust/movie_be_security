@@ -1,19 +1,28 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import security.example.security.model.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 import com.auth0.jwt.JWTVerifier;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 public class JwtService {
@@ -41,11 +50,17 @@ public class JwtService {
                 .sign(algorithm);
     }
 
-    public DecodedJWT decodeToken(String token) {
-        String secretKey = "123";
-        String decodedToken = token.replace("Bearer ", "");
-        Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        return verifier.verify(decodedToken);
+    public DecodedJWT decodeToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalArgumentException("Authentication not found or not authenticated");
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof DecodedJWT) {
+            return (DecodedJWT) principal;
+        } else {
+            throw new IllegalArgumentException("Principal is not an instance of DecodedJWT");
+        }
     }
 }

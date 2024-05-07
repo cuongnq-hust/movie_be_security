@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import security.example.security.dto.movie.MovieRequestDto;
 import security.example.security.dto.movie.MovieSearchDto;
-import security.example.security.service.impl.MovieService;
+import security.example.security.service.MovieService;
 
 import java.util.List;
 

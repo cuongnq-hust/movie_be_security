@@ -1,4 +1,4 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.modelmapper.ModelMapper;
@@ -11,7 +11,6 @@ import security.example.security.entity.CartItem;
 import security.example.security.repository.CartItemRepository;
 import security.example.security.repository.CartRepository;
 import security.example.security.repository.MovieRepository;
-import security.example.security.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +19,20 @@ import java.util.Optional;
 @Service
 public class CartService {
     private final JwtService jwtService;
-    private final UserRepository userRepository;
     private final MovieRepository movieRepository;
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
     private static final ModelMapper modelMapper = new ModelMapper();
 
-    public CartService(JwtService jwtService, UserRepository userRepository, MovieRepository movieRepository, CartItemRepository cartItemRepository, CartRepository cartRepository) {
+    public CartService(JwtService jwtService, MovieRepository movieRepository, CartItemRepository cartItemRepository, CartRepository cartRepository) {
         this.jwtService = jwtService;
-        this.userRepository = userRepository;
         this.movieRepository = movieRepository;
         this.cartItemRepository = cartItemRepository;
         this.cartRepository = cartRepository;
     }
 
-    public CartDto getCartNow(String accessToken) {
-        DecodedJWT jwt = jwtService.decodeToken(accessToken);
+    public CartDto getCartNow() {
+        DecodedJWT jwt = jwtService.decodeToken();
         String userName = jwt.getSubject();
         List<Cart> cartList = cartRepository.findCartByUserName(userName);
         if (cartList.isEmpty()) {
@@ -48,14 +45,14 @@ public class CartService {
         }
     }
 
-    public CartDto addToCart(CartItemDto cartItemDto, String accessToken) {
-        CartDto cart = getCartNow(accessToken);
+    public CartDto addToCart(CartItemDto cartItemDto) {
+        CartDto cart = getCartNow();
         if (cart != null) {
             List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
             for (CartItem cartItem : cartItemList) {
                 if (cartItem.getMovie().getId().equals(cartItemDto.getMovieId())) {
                     if (cartItemDto.getQuantity() == 0) {
-                        deleteCartItem(cartItemDto.getMovieId(), accessToken);
+                        deleteCartItem(cartItemDto.getMovieId());
                         totalCart(cart.getId());
                         return cart;
                     } else {
@@ -80,8 +77,8 @@ public class CartService {
         }
     }
 
-    public void deleteCartItem(Long id, String accessToken) {
-        CartDto cart = getCartNow(accessToken);
+    public void deleteCartItem(Long id) {
+        CartDto cart = getCartNow();
         List<CartItem> cartItemList = cartItemRepository.findCartItemByCartId(cart.getId());
         for (CartItem cartItem : cartItemList) {
             if (cartItem.getMovie().getId() == id) {

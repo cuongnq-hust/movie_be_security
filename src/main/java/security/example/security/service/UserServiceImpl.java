@@ -1,4 +1,4 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.transaction.Transactional;
@@ -12,7 +12,6 @@ import security.example.security.model.Role;
 import security.example.security.model.User;
 import security.example.security.repository.RoleRepository;
 import security.example.security.repository.UserRepository;
-import security.example.security.service.UserService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -55,8 +54,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByToken(String token) {
-        DecodedJWT jwt = jwtService.decodeToken(token);
+    public User getUserByToken() {
+        DecodedJWT jwt = jwtService.decodeToken();
         String userName = jwt.getSubject();
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userName));
@@ -64,8 +63,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(UserDto userDto, String token) {
-        DecodedJWT jwt = jwtService.decodeToken(token);
+    public User updateUser(UserDto userDto) {
+        DecodedJWT jwt = jwtService.decodeToken();
         String userNameByToken = jwt.getSubject();
         User user = userRepository.findByEmail(userNameByToken)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userNameByToken));
@@ -74,8 +73,8 @@ public class UserServiceImpl implements UserService {
         user.setMobile_number(userDto.getMobile_number());
         return userRepository.save(user);
     }
-    public List<Role> getUserRolesByUsername(String token) {
-        DecodedJWT jwt = jwtService.decodeToken(token);
+    public List<Role> getUserRolesByUsername() {
+        DecodedJWT jwt = jwtService.decodeToken();
         String userNameByToken = jwt.getSubject();
         return roleRepository.findUserRolesByEmail(userNameByToken);
     }

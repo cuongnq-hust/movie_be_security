@@ -7,7 +7,7 @@ import security.example.security.dto.category.CategorResponseDto;
 import security.example.security.dto.category.CategoryRequestDto;
 import security.example.security.entity.CategoryEntity;
 import security.example.security.dto.category.SearchCategoryDto;
-import security.example.security.service.impl.CategoryService;
+import security.example.security.service.CategoryService;
 
 import java.util.List;
 

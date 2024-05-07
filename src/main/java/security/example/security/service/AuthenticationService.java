@@ -1,12 +1,14 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import security.example.security.auth.AuthenticationRequest;
 import security.example.security.auth.AuthenticationResponse;
@@ -15,7 +17,6 @@ import security.example.security.model.Role;
 import security.example.security.model.User;
 import security.example.security.repository.RoleCustomRepo;
 import security.example.security.repository.UserRepository;
-import security.example.security.service.UserService;
 
 import java.util.*;
 
@@ -55,11 +56,15 @@ public class AuthenticationService {
             User user = userRepository.findByEmail(authenticationRequest.getEmail())
                     .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-            authenticationManager.authenticate(
+            // Xác thực người dùng
+            Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
 
-            List<Role> roles = roleCustomRepo.getRole(user);
+            // Đặt thông tin xác thực vào SecurityContextHolder
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            // Tiếp tục xử lý các bước khác
+            List<Role> roles = roleCustomRepo.getRole(user);
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             Set<Role> roleSet = new HashSet<>();
             roles.forEach(role -> {
@@ -81,7 +86,7 @@ public class AuthenticationService {
                     .build());
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (BadCredentialsException e) {
+        } catch (AuthenticationCredentialsNotFoundException e) {
             return ResponseEntity.badRequest().body("Invalid Credential");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");

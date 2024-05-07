@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import security.example.security.dto.comment.CommentResponseDto;
-import security.example.security.service.impl.CommentService;
+import security.example.security.service.CommentService;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class CommentController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Void> createComment(@RequestBody String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken) {
-        comment.addComment(body, id, accessToken);
+    public ResponseEntity<Void> createComment(@RequestBody String body, @PathVariable Long id) {
+        comment.addComment(body, id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

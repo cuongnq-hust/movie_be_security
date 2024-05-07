@@ -1,4 +1,4 @@
-package security.example.security.service.impl;
+package security.example.security.service;
 
 
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import security.example.security.aws.AwsS3;
 import security.example.security.model.request.UploadFileRequest;
-import security.example.security.service.AwsS3Service;
 import security.example.security.utils.Constant;
 import software.amazon.awssdk.regions.Region;
 

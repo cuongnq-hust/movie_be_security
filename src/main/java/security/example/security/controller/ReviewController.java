@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import security.example.security.dto.review.ReviewResponseDto;
-import security.example.security.service.impl.CommentService;
-import security.example.security.service.impl.ReviewService;
+import security.example.security.service.CommentService;
+import security.example.security.service.ReviewService;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ public class ReviewController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Void> createReview(@RequestBody String body, @PathVariable Long id, @RequestHeader(name = "Authorization") String accessToken) {
-        reviewService.saveReview(body, id, accessToken);
+    public ResponseEntity<Void> createReview(@RequestBody String body, @PathVariable Long id) {
+        reviewService.saveReview(body, id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

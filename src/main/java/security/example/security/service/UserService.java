@@ -6,10 +6,12 @@ import security.example.security.model.User;
 
 public interface UserService {
     User saveUser(User user);
+
     Role saveRole(Role role);
+
     void addToUser(String username, String rolename);
 
-    User getUserByToken(String token);
+    User getUserByToken();
 
-    User updateUser(UserDto userDto, String token);
+    User updateUser(UserDto userDto);
 }
